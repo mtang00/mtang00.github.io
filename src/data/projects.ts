@@ -24,12 +24,12 @@ export const projects: Project[] = [
       "🏋️ 800+ exercise database with custom exercise creation",
       "🎯 Multi-category goal system (strength, cardio, body composition)",
       "👥 Social features: friends, messaging, groups",
-      "📈 Weight tracking and trend analysis",
+      "⚔️ Fair competition system with Personal Best Consistency scoring",
+      "📈 Advanced workout trends and personal analytics",
       "📋 Workout templates and favorites",
-      "🏆 Leaderboard and gamification system",
+      "🏆 Multi-timeframe leaderboards (daily, weekly, monthly)",
       "📱 Progressive Web App with offline capabilities",
-      "🔐 Secure authentication with remember me functionality",
-      "📊 Analytics and progress tracking"
+      "🔐 Secure authentication with remember me functionality"
     ],
     
     architecture: {
@@ -41,11 +41,11 @@ export const projects: Project[] = [
     
     highlights: [
       "Modular architecture with dependency injection",
-      "Sophisticated points calculation using INOL formula",
-      "Real-time social features with activity tracking",
-      "Mobile-first responsive design",
-      "Comprehensive testing workflow",
-      "Production deployment at fnctracker.com"
+      "Fair scoring algorithm comparing personal progress vs absolute performance",
+      "Real-time social features with friend activity tracking",
+      "Advanced analytics with personal averages and trend analysis",
+      "Mobile-first responsive design with 44px touch targets",
+      "Production deployment at fnctracker.com with 800+ exercises"
     ],
     
     links: {
