@@ -53,12 +53,16 @@ export const Hero = () => {
         </motion.p>
         
         <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <Button onClick={handleScrollToProjects} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900">
             View My Work
+          </Button>
+          <Button href="./resume.pdf" target="_blank" className="bg-white/20 hover:bg-white/30 text-white border border-white/30">
+            📄 Preview Resume
           </Button>
         </motion.div>
       </div>
