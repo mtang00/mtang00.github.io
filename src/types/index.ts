@@ -51,3 +51,14 @@ export interface Skill {
   level?: number;
   category?: string;
 }
+
+export interface Education {
+  institution: string;
+  degree: string;
+  field: string;
+  location: string;
+  graduationYear: string;
+  gpa?: string;
+  relevantCoursework?: string[];
+  achievements?: string[];
+}

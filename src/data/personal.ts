@@ -1,4 +1,4 @@
-import { PersonalInfo, ContactInfo, Skill } from '../types';
+import { PersonalInfo, ContactInfo, Skill, Education } from '../types';
 
 export const personalInfo: PersonalInfo = {
   name: "Michael Tang",
@@ -61,3 +61,21 @@ export const skills: Skill[] = [
   { name: "Cross-Platform Development", category: "concepts" },
   { name: "Performance Optimization", category: "concepts" }
 ];
+
+export const education: Education = {
+  institution: "University of Wisconsin - Madison",
+  degree: "Bachelor of Science",
+  field: "Computer Science",
+  location: "Madison, WI",
+  graduationYear: "2023",
+  relevantCoursework: [
+    "Data Structures & Algorithms",
+    "Software Engineering",
+    "Database Systems",
+    "Computer Networks",
+    "Operating Systems",
+    "Machine Learning",
+    "Web Development",
+    "Object-Oriented Programming"
+  ]
+};
