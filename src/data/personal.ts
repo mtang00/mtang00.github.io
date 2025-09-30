@@ -2,8 +2,8 @@ import { PersonalInfo, ContactInfo, Skill } from '../types';
 
 export const personalInfo: PersonalInfo = {
   name: "Michael Tang",
-  title: "Software Developer & Portfolio Showcase",
-  bio: "Brief introduction about yourself and your passion for development."
+  title: "Software Developer & Problem Solver",
+  bio: "I'm a developer who enjoys tackling challenges and building solutions that actually help people. Whether it's creating a fitness app or designing a smooth user experience, I focus on making technology work better for everyone."
 };
 
 export const contactInfo: ContactInfo = {

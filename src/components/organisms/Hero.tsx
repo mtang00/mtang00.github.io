@@ -153,8 +153,8 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          Explore my journey through code, creativity, and innovation. 
-          Discover projects that showcase modern web development and thoughtful design.
+          I love building things that solve real problems. From fitness trackers to interactive web apps, 
+          I'm passionate about creating software that makes a difference.
         </motion.p>
         
         <motion.div
