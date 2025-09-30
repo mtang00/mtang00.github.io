@@ -14,12 +14,32 @@ export const contactInfo: ContactInfo = {
 };
 
 export const skills: Skill[] = [
-  { name: "JavaScript", category: "frontend" },
+  // Frontend Technologies
   { name: "React", category: "frontend" },
   { name: "TypeScript", category: "frontend" },
+  { name: "JavaScript (ES6+)", category: "frontend" },
+  { name: "HTML5 & CSS3", category: "frontend" },
+  { name: "Tailwind CSS", category: "frontend" },
+  { name: "Framer Motion", category: "frontend" },
+  { name: "Responsive Design", category: "frontend" },
+  
+  // Backend & Database
+  { name: "PHP", category: "backend" },
   { name: "Node.js", category: "backend" },
   { name: "Python", category: "backend" },
-  { name: "HTML/CSS", category: "frontend" },
-  { name: "Git", category: "tools" },
-  { name: "Docker", category: "tools" }
+  { name: "SQLite", category: "database" },
+  { name: "REST APIs", category: "backend" },
+  
+  // Tools & DevOps
+  { name: "Git & GitHub", category: "tools" },
+  { name: "Docker", category: "tools" },
+  { name: "Vite", category: "tools" },
+  { name: "GitHub Actions", category: "tools" },
+  { name: "ESLint & Prettier", category: "tools" },
+  
+  // Development Practices
+  { name: "Progressive Web Apps", category: "concepts" },
+  { name: "Mobile-First Design", category: "concepts" },
+  { name: "Component Architecture", category: "concepts" },
+  { name: "Performance Optimization", category: "concepts" }
 ];
