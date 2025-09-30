@@ -67,7 +67,7 @@ export const education: Education = {
   degree: "Bachelor of Science",
   field: "Computer Science",
   location: "Madison, WI",
-  graduationYear: "2023",
+  graduationYear: "",
   relevantCoursework: [
     "Data Structures & Algorithms",
     "Software Engineering",

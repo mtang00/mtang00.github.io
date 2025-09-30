@@ -33,7 +33,7 @@ export const Education = () => {
                 {education.institution}
               </p>
               <p className="text-gray-600">
-                {education.location} • Class of {education.graduationYear}
+                {education.location}
               </p>
             </div>
             <div className="mt-4 md:mt-0">
