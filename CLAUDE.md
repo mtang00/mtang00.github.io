@@ -26,6 +26,7 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 - **Use TypeScript interfaces** for all data structures and props
 - **Follow React best practices** - hooks, functional components, proper state management
 - **Prefer composition over inheritance** - small, reusable components
+- **Push to GitHub after each change** - Always commit and push changes to keep the live site updated
 
 ### Component Architecture
 - **Atomic Design** - Atoms, molecules, organisms, templates, pages
