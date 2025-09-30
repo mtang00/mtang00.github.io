@@ -29,6 +29,11 @@ dist-ssr/
 .env.test.local
 .env.production.local
 
+# Sensitive configuration files
+config.local.ts
+secrets.json
+credentials.json
+
 # Logs
 logs/
 *.log
