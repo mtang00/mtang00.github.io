@@ -1,1 +1,0 @@
-Test file to verify credential helper is working
