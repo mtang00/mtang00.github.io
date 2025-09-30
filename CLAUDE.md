@@ -6,6 +6,9 @@ This file provides guidance to Claude Code when working with this React + TypeSc
 
 Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, and Framer Motion for professional animations and optimal performance.
 
+**Repository:** https://github.com/mtang00/mtang00.github.io
+**Live Site:** https://mtang00.github.io/
+
 ## Tech Stack
 
 - **React 18** - Modern React with hooks and concurrent features

@@ -22,7 +22,7 @@ The project is configured with **GitHub Actions** for automatic deployment:
    - The workflow will automatically run and deploy your site
 
 3. **Your site will be live at:**
-   `https://mtang00.github.io/repo/`
+   `https://mtang00.github.io/`
 
 ### Automatic Features:
 - ✅ Deploys on every push to `main` branch
@@ -45,7 +45,7 @@ npm run deploy
 ## 📝 Configuration Details
 
 ### Vite Configuration:
-- **Base path:** `/repo/` (matches your repository name)
+- **Base path:** `/` (root domain for mtang00.github.io)
 - **Build output:** `dist/` folder
 - **Asset optimization:** Enabled for production
 
