@@ -1,0 +1,26 @@
+﻿Michael Tang 
+Madison, WI | (630)328-3482 | michaeltang00@gmail.com | www.linkedin.com/in/michael-tang123 
+Self-motivated full-stack engineer with over three years of professional experience in various technological environments. Work experience 
+NeuralRad LLC - Software Engineer April 2024 - Current Medical Application Development 
+• Refined lesion tracking module, enhancing user experience when comparing ranges of interest over time. • Engineered semi-automatic 3D image segmentation feature for the NeuralRad platform, leveraging Python and JavaScript for backend processing with Vista3D and Rust for frontend interaction; enables users to perform AI-assisted segmentation of DICOM volumes with intuitive point-and-box-based guidance. 
+• Developed an interactive beam simulation module for radiotherapy planning within NeuralRad, enabling medical physicists to visualize, edit, and analyze treatment beams in 2D and 3D views, mimicking real-world clinical applications. Database Development and Management 
+• Developed a Python and MongoDB-based service for advanced patient data management, featuring a custom wrapper for dynamic document updates and flexible ingestion from JSON, XML, & spreadsheets. 
+• Architected a task-driven automation framework utilizing MongoDB for data storage and query execution, with a Flask API for dynamic, configuration-driven data retrieval and task initiation. 
+PDF Generator 
+• Developed an XML-configurable CLI service for automated, multi-stage PDF report generation by aggregating data from various files, databases, and APIs to create styled reports with text, images, tables, graphs, embedded PDFs. PRO Fence Naperville - Software Engineer (Consultant) June 2023 - May 2024 
+Web and Mobile Application Development 
+• Solo developed scalable, responsive cross-platform web and mobile applications for fencing using React.js and React Native, enabling the creation of instantly downloadable, automatically generated digital PDF estimates. • Achieved an 80% reduction in estimation creation time, 60% less customer onboarding time, and 40% increased data management efficiency. 
+Backend and Database Management 
+• Implemented a robust SQL database to securely and efficiently store customer data, sketches, pricing, and generated estimates, utilizing a RESTFUL API using ASP.NET Core in C# for database retrieval, deploying both on an AWS EC2 instance, ensuring maximum uptime and accessibility. 
+Citcon USA LLC (Santa Clara) - Web Developer Intern December 2021 - December 2022 
+• Developed a Python script to automate the insertion, extraction, and sorting of user data from the employee directory (Okta) to a readable spreadsheet, reducing unnecessary license costs by 8%. 
+Education 
+University of Wisconsin - Madison 
+Bachelor of Science: Computer Science 
+Skills 
+Certifications: AWS Developer - Associate, React, C#, Python 
+Programming Languages: Python, Rust, JavaScript, C#, Java 
+Technical Skills: HTML, CSS, Node.js, React.js, React Native, ASP.NET, Express.js, Git, AWS 
+Databases: MongoDB, MySQL, Microsoft SQL Server 
+Operating Systems: Microsoft Windows, Linux, Unix 
+Other: Authorized to work for any US employer (US citizen by birth)

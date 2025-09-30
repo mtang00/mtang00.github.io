@@ -15,7 +15,8 @@ export const contactInfo: ContactInfo = {
 
 export const skills: Skill[] = [
   // Frontend Technologies
-  { name: "React", category: "frontend" },
+  { name: "React.js", category: "frontend" },
+  { name: "React Native", category: "frontend" },
   { name: "TypeScript", category: "frontend" },
   { name: "JavaScript (ES6+)", category: "frontend" },
   { name: "HTML5 & CSS3", category: "frontend" },
@@ -23,23 +24,40 @@ export const skills: Skill[] = [
   { name: "Framer Motion", category: "frontend" },
   { name: "Responsive Design", category: "frontend" },
   
-  // Backend & Database
-  { name: "PHP", category: "backend" },
-  { name: "Node.js", category: "backend" },
+  // Backend Technologies
   { name: "Python", category: "backend" },
-  { name: "SQLite", category: "database" },
+  { name: "Rust", category: "backend" },
+  { name: "C#", category: "backend" },
+  { name: "Java", category: "backend" },
+  { name: "Node.js", category: "backend" },
+  { name: "ASP.NET Core", category: "backend" },
+  { name: "Express.js", category: "backend" },
+  { name: "Flask", category: "backend" },
   { name: "REST APIs", category: "backend" },
   
-  // Tools & DevOps
+  // Database Technologies
+  { name: "MongoDB", category: "database" },
+  { name: "MySQL", category: "database" },
+  { name: "Microsoft SQL Server", category: "database" },
+  
+  // Cloud & DevOps
+  { name: "AWS", category: "tools" },
+  { name: "AWS EC2", category: "tools" },
   { name: "Git & GitHub", category: "tools" },
-  { name: "Docker", category: "tools" },
   { name: "Vite", category: "tools" },
   { name: "GitHub Actions", category: "tools" },
   { name: "ESLint & Prettier", category: "tools" },
   
-  // Development Practices
-  { name: "Progressive Web Apps", category: "concepts" },
-  { name: "Mobile-First Design", category: "concepts" },
-  { name: "Component Architecture", category: "concepts" },
+  // Operating Systems
+  { name: "Linux", category: "tools" },
+  { name: "Unix", category: "tools" },
+  { name: "Windows", category: "tools" },
+  
+  // Specialized Technologies
+  { name: "3D Image Processing", category: "concepts" },
+  { name: "DICOM Medical Imaging", category: "concepts" },
+  { name: "AI-Assisted Segmentation", category: "concepts" },
+  { name: "PDF Generation", category: "concepts" },
+  { name: "Cross-Platform Development", category: "concepts" },
   { name: "Performance Optimization", category: "concepts" }
 ];
