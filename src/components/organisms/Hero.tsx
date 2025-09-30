@@ -153,8 +153,9 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          I love building things that solve real problems. From fitness trackers to interactive web apps, 
-          I'm passionate about creating software that makes a difference.
+          I love building things that solve real problems. Whether helping out a local small business 
+          with their website or challenging my friends on a fitness app, I'm passionate about creating 
+          software that makes a difference in people's lives.
         </motion.p>
         
         <motion.div
