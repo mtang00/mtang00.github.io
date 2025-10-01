@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with this React + TypeScript portfolio project.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -18,6 +18,26 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 - **Framer Motion** - Professional animations and transitions
 - **ESLint + Prettier** - Code quality and formatting
 
+## Architecture Overview
+
+### Component Structure
+The codebase follows **Atomic Design** principles with a clear component hierarchy:
+
+- **Atoms** (`src/components/atoms/`) - Basic building blocks (Button, TechTag, FeatureTag)
+- **Molecules** (`src/components/molecules/`) - Simple combinations (Navigation, ProjectCard, ResumePreview)
+- **Organisms** (`src/components/organisms/`) - Complex sections (Hero, About, Projects, Skills, Education, Contact, Footer, ProjectModal)
+
+### Data Management
+- **Centralized data** in `src/data/` with TypeScript interfaces
+- **projects.ts** - Project portfolio data with comprehensive metadata
+- **personal.ts** - Personal info, contact details, skills, and education
+- **Strong typing** via interfaces in `src/types/index.ts`
+
+### Single Page Application
+- **App.tsx** serves as the main layout with all sections rendered sequentially
+- **No routing** - single-page portfolio with smooth scrolling navigation
+- **Modal system** for detailed project views via ProjectModal component
+
 ## Development Guidelines
 
 ### Code Quality Rules
@@ -26,10 +46,8 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 - **Use TypeScript interfaces** for all data structures and props
 - **Follow React best practices** - hooks, functional components, proper state management
 - **Prefer composition over inheritance** - small, reusable components
-- **Push to GitHub after each change** - Always commit and push changes to keep the live site updated
 
 ### Component Architecture
-- **Atomic Design** - Atoms, molecules, organisms, templates, pages
 - **Single Responsibility** - Each component has one clear purpose
 - **Type Safety** - All props, state, and function parameters properly typed
 - **Performance** - Use React.memo, useMemo, useCallback when appropriate
@@ -40,18 +58,17 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 - **Accessibility** - Respect prefers-reduced-motion settings
 - **Progressive Enhancement** - Ensure functionality works without animations
 
-### File Structure
+### Actual File Structure
 ```
 src/
 ├── components/          # Reusable UI components
-│   ├── atoms/          # Basic building blocks
-│   ├── molecules/      # Simple component combinations
-│   └── organisms/      # Complex component combinations
-├── pages/              # Page components
-├── hooks/              # Custom React hooks
-├── types/              # TypeScript type definitions
-├── data/               # Static data and configuration
-└── styles/             # Global styles and Tailwind config
+│   ├── atoms/          # TechTag, FeatureTag, Button
+│   ├── molecules/      # Navigation, ProjectCard, ResumePreview
+│   └── organisms/      # Hero, About, Projects, Skills, Education, Contact, Footer, ProjectModal
+├── data/               # Static data and configuration (projects.ts, personal.ts)
+├── types/              # TypeScript interfaces (index.ts)
+├── styles/             # Global styles (globals.css)
+└── main.tsx            # React app entry point
 ```
 
 ### Development Commands
@@ -135,9 +152,21 @@ npm run format
 
 ## Deployment
 
-- **Vercel** recommended for zero-config deployment
-- Build optimization for production
-- Environment variables for configuration
-- Automatic TypeScript checking in CI/CD
+### GitHub Pages with Actions
+- **Automatic deployment** via GitHub Actions on push to `main` branch
+- **Workflow file:** `.github/workflows/deploy.yml`
+- **Build process:** TypeScript compilation → Vite build → GitHub Pages deploy
+- **Manual deployment:** `npm run deploy` (uses gh-pages package)
+- **Alternative script:** `./deploy.sh` for manual deployment
+
+### Build Commands
+- `npm run build` - Production build with TypeScript checking
+- `npm run deploy` - Manual deployment to GitHub Pages
+- `npm run deploy-manual` - Alternative deployment via shell script
+
+### Key TypeScript Configuration
+- **Strict mode enabled** with `noUnusedLocals` and `noUnusedParameters`
+- **Target:** ES2020 with modern browser support
+- **Module resolution:** Bundler mode for Vite compatibility
 
 Remember: Build fast, type-safe, and beautiful. Always prioritize user experience and performance.

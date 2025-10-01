@@ -123,3 +123,12 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Legacy files from old portfolio version
+script.js
+styles.css
+projects-data.js
+Michael_Tang_Resume.txt
+
+# Package lock file conflicts
+package-lock.json
