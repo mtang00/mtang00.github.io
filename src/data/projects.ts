@@ -27,10 +27,10 @@ export const projects: Project[] = [
     ],
 
     features: [
-      "👥 Full CRUD customer database with archive/unarchive functionality (209+ active customers)",
+      "👥 Full CRUD customer database with archive/unarchive functionality (thousands of customers)",
       "✏️ SVG-based sketch editor with fence, gate, post, obstacle, and annotation tools",
       "📐 Interactive property diagrams with precise measurements and multi-layer rendering",
-      "🏗️ Configurable fence styles (18+) with many-to-many cost relationships",
+      "🏗️ Configurable fence styles with many-to-many cost relationships",
       "📄 Automated A4 landscape PDF generation with 2-page professional layout",
       "💰 Dynamic cost calculator with material/labor breakdown and markup controls",
       "🔍 Archive management system for maintaining clean active records",
@@ -43,11 +43,11 @@ export const projects: Project[] = [
       frontend: "React 18 web app with Material-UI components + React Native mobile app (Expo)",
       backend: "Node.js/Express REST API with raw SQL queries",
       database: "SQLite3 with relational schema (9 tables, foreign key constraints)",
-      deployment: "AWS EC2 instance with production database (95MB+ estimate data)"
+      deployment: "AWS EC2 instance with production database managing thousands of records"
     },
 
     highlights: [
-      "Production system managing 209 customers, 216 sketches, and 254 estimates with real revenue tracking",
+      "Production system managing thousands of customers, property sketches, and estimates with real revenue tracking",
       "SVG rendering engine converts sketch JSON to visual diagrams, then to PDF canvas rendering",
       "RESTful API with 20+ endpoints supporting CRUD operations across all business entities",
       "Material-UI based responsive design optimized for desktop workflow and data entry",
@@ -64,17 +64,17 @@ export const projects: Project[] = [
       {
         url: "/assets/fence_home.jpg",
         description: "Application Dashboard - Business Metrics Overview",
-        businessImpact: "Real-time business intelligence displaying 209 total customers, 216 property sketches, 18 configurable fence styles, and 254 generated estimates. Quick-access navigation buttons (Customers, Sketches, Styles, Estimates) streamline the sales workflow, reducing time to create quotes by 60% compared to manual Excel-based processes."
+        businessImpact: "Real-time business intelligence displaying total customers, property sketches, configurable fence styles, and generated estimates across thousands of records. Quick-access navigation buttons (Customers, Sketches, Styles, Estimates) streamline the sales workflow, reducing time to create quotes by 60% compared to manual Excel-based processes."
       },
       {
         url: "/assets/fence_customers.jpg",
         description: "Customer Database with Material-UI Data Grid",
-        businessImpact: "Full CRUD customer management system with real-time search filtering across 209+ records. Archive functionality keeps the database clean while preserving historical data. Sortable columns (First Name, Last Name, Contact, Location, Created, Last Modified) with inline edit/delete/archive actions eliminate manual spreadsheet maintenance and reduce customer lookup time from 5 minutes to 10 seconds."
+        businessImpact: "Full CRUD customer management system with real-time search filtering across thousands of records. Archive functionality keeps the database clean while preserving historical data. Sortable columns (First Name, Last Name, Contact, Location, Created, Last Modified) with inline edit/delete/archive actions eliminate manual spreadsheet maintenance and reduce customer lookup time from 5 minutes to 10 seconds."
       },
       {
         url: "/assets/fence_sketches.jpg",
         description: "Sketch Library with Grid/List Toggle Views",
-        businessImpact: "Centralized repository of 216+ property sketches organized by customer with visual previews. Toggle between grid and list views for efficient browsing. Filter dropdown enables quick customer-specific searches. Reusing existing sketches for similar properties or repeat customers eliminates 15-20 minutes of redundant drawing time per estimate, directly improving sales team productivity."
+        businessImpact: "Centralized repository of thousands of property sketches organized by customer with visual previews. Toggle between grid and list views for efficient browsing. Filter dropdown enables quick customer-specific searches. Reusing existing sketches for similar properties or repeat customers eliminates 15-20 minutes of redundant drawing time per estimate, directly improving sales team productivity."
       },
       {
         url: "/assets/fence_sample_sketch.jpg",
@@ -84,12 +84,12 @@ export const projects: Project[] = [
       {
         url: "/assets/fence_styles.jpg",
         description: "Fence Styles & Pricing Management with Cost Associations",
-        businessImpact: "Master pricing database of 18 fence styles (6'H Cedar Privacy, 4'H Jerith, 5'H Jerith, etc.) with linked material and labor costs via junction table architecture. Each style displays associated costs with markup percentages. Price updates propagate to all future estimates instantly, ensuring pricing consistency across the sales team and protecting profit margins from outdated quotes."
+        businessImpact: "Master pricing database of multiple fence styles (Cedar Privacy, Jerith, PVC, etc.) with linked material and labor costs via junction table architecture. Each style displays associated costs with markup percentages. Price updates propagate to all future estimates instantly, ensuring pricing consistency across the sales team and protecting profit margins from outdated quotes."
       },
       {
         url: "/assets/fence_estimates.jpg",
         description: "Estimates Dashboard with Revenue Tracking & Status Management",
-        businessImpact: "Comprehensive view of all 251 estimates with total revenue tracking, GPM (Gross Profit Margin) calculations, and sortable columns. Status workflow (Pending, Approved, Not Approved, Completed) prevents leads from falling through cracks. Search filtering enables quick estimate retrieval by customer, style, or status. Revenue visibility and pipeline tracking inform business decisions and cash flow forecasting."
+        businessImpact: "Comprehensive view of thousands of estimates with total revenue tracking, GPM (Gross Profit Margin) calculations, and sortable columns. Status workflow (Pending, Approved, Not Approved, Completed) prevents leads from falling through cracks. Search filtering enables quick estimate retrieval by customer, style, or status. Revenue visibility and pipeline tracking inform business decisions and cash flow forecasting."
       },
       {
         url: "/assets/sample_estimate1.jpg",
@@ -123,7 +123,7 @@ export const projects: Project[] = [
       apiEndpoints: "20+ REST endpoints",
       databaseTables: "9 tables (Customers, Sketches, Styles, StyleCosts, AdditionalCosts, Users, Estimates, CustomerPDFs)",
       moduleSystem: "ES6 modules + React components",
-      testingApproach: "Production deployment with 95MB+ live business database"
+      testingApproach: "Production deployment with live business database managing thousands of records"
     }
   },
   {
