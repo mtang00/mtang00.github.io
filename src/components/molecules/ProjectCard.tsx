@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Project } from '../../types';
+import { Project, ProjectImage } from '../../types';
 import { Button } from '../atoms/Button';
 import { FeatureTag } from '../atoms/FeatureTag';
 
@@ -13,6 +13,9 @@ export const ProjectCard = ({ project, onShowDetails, index }: ProjectCardProps)
   const techStack = project.technologies.slice(0, 3).join(' • ');
   const moreCount = project.technologies.length > 3 ? ` +${project.technologies.length - 3} more` : '';
 
+  const firstImage = project.images && project.images[0];
+  const imageUrl = typeof firstImage === 'string' ? firstImage : (firstImage as ProjectImage)?.url;
+
   return (
     <motion.div
       className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
@@ -21,10 +24,10 @@ export const ProjectCard = ({ project, onShowDetails, index }: ProjectCardProps)
       transition={{ duration: 0.6, delay: index * 0.1 }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
-      {project.images && project.images[0] && (
+      {imageUrl && (
         <div className="w-full h-48 overflow-hidden bg-gray-100">
           <img
-            src={project.images[0]}
+            src={imageUrl}
             alt={project.title}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             loading="lazy"

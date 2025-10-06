@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
-import { Project } from '../../types';
+import { Project, ProjectImage } from '../../types';
 import { Button } from '../atoms/Button';
 import { TechTag } from '../atoms/TechTag';
+import { ImageSlideshow } from '../molecules/ImageSlideshow';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -30,6 +31,9 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
   }, [isOpen, onClose]);
 
   if (!project) return null;
+
+  const hasDetailedImages = project.images.length > 0 && typeof project.images[0] === 'object';
+  const detailedImages = hasDetailedImages ? (project.images as ProjectImage[]) : [];
 
   return (
     <AnimatePresence>
@@ -76,25 +80,12 @@ export const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) =>
               </div>
               
               <div className="space-y-8">
-                {project.images && project.images.length > 0 && (
+                {hasDetailedImages && detailedImages.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 border-b-2 border-primary-500 pb-2">
-                      Screenshots
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4 border-b-2 border-primary-500 pb-2">
+                      Project Showcase
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {project.images.map((image, idx) => (
-                        <motion.img
-                          key={idx}
-                          src={image}
-                          alt={`${project.title} screenshot ${idx + 1}`}
-                          className="w-full rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: idx * 0.1 }}
-                          loading="lazy"
-                        />
-                      ))}
-                    </div>
+                    <ImageSlideshow images={detailedImages} projectTitle={project.title} />
                   </div>
                 )}
 

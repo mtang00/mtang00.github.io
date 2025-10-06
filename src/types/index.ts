@@ -1,3 +1,9 @@
+export interface ProjectImage {
+  url: string;
+  description: string;
+  businessImpact: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -21,7 +27,7 @@ export interface Project {
       password: string;
     };
   };
-  images: string[];
+  images: string[] | ProjectImage[];
   workflow: string[];
   technicalDetails: {
     lines: string;

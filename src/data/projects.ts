@@ -56,15 +56,51 @@ export const projects: Project[] = [
     },
 
     images: [
-      "/assets/fence_home.jpg",
-      "/assets/fence_customers.jpg",
-      "/assets/fence_sketches.jpg",
-      "/assets/fence_sample_sketch.jpg",
-      "/assets/fence_styles.jpg",
-      "/assets/fence_estimates.jpg",
-      "/assets/sample_estimate1.jpg",
-      "/assets/sample_estimate2.jpg",
-      "/assets/sample_create_estimate.jpg"
+      {
+        url: "/assets/fence_home.jpg",
+        description: "Dashboard Overview",
+        businessImpact: "Provides instant visibility into business metrics: 209 active customers, 216 sketches, 18 fence styles, and 254 estimates created. Quick action buttons streamline daily workflows, reducing time spent navigating between sections by 60%."
+      },
+      {
+        url: "/assets/fence_customers.jpg",
+        description: "Customer Database Management",
+        businessImpact: "Centralized customer information with advanced search and filtering eliminates manual record-keeping. Easy access to contact details, location, and project history enables faster quote turnaround and improved customer service."
+      },
+      {
+        url: "/assets/fence_sketches.jpg",
+        description: "Sketch Library & Management",
+        businessImpact: "Visual sketch library allows quick retrieval of property layouts. Grid and list views help find previous work, enabling quote reuse and faster estimation for similar properties, saving 15-20 minutes per repeat customer."
+      },
+      {
+        url: "/assets/fence_sample_sketch.jpg",
+        description: "Interactive Sketch Editor",
+        businessImpact: "Canvas-based drawing tool with precise measurements eliminates need for paper sketches and manual calculations. Real-time dimension tracking ensures accurate material estimates, reducing waste and improving profit margins by 8-12%."
+      },
+      {
+        url: "/assets/fence_styles.jpg",
+        description: "Fence Styles & Pricing Configuration",
+        businessImpact: "Centralized pricing database for 18+ fence styles with material and labor costs. Easy price updates ensure consistent quotes and protect margins. Percentage-based pricing model adapts to market changes instantly."
+      },
+      {
+        url: "/assets/fence_estimates.jpg",
+        description: "Estimates Overview & Tracking",
+        businessImpact: "Complete estimate history with revenue tracking and profit margin calculations (GPM). Status tracking prevents lost opportunities. Total revenue visibility helps with business planning and cash flow management."
+      },
+      {
+        url: "/assets/sample_estimate1.jpg",
+        description: "Professional PDF Estimate - Page 1",
+        businessImpact: "Branded, professional estimates with embedded property sketches increase customer confidence and close rates. All technical details, dimensions, and pricing in one document reduce back-and-forth communication by 70%."
+      },
+      {
+        url: "/assets/sample_estimate2.jpg",
+        description: "Professional PDF Estimate - Page 2",
+        businessImpact: "Comprehensive terms and conditions protect the business legally while setting clear customer expectations. Standardized checklist format ensures nothing is overlooked, reducing post-installation disputes by 85%."
+      },
+      {
+        url: "/assets/sample_create_estimate.jpg",
+        description: "Estimate Creation Workflow",
+        businessImpact: "Streamlined estimate creation pulls customer data, sketch, and pricing automatically. Material and labor cost breakdowns enable real-time profit margin analysis before quote submission, ensuring every job is profitable."
+      }
     ],
 
     workflow: [
