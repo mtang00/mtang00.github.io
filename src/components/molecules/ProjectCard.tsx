@@ -15,16 +15,28 @@ export const ProjectCard = ({ project, onShowDetails, index }: ProjectCardProps)
 
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300"
+      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
-      <div className="mb-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
-        <p className="text-sm text-gray-600 italic">{techStack}{moreCount}</p>
-      </div>
+      {project.images && project.images[0] && (
+        <div className="w-full h-48 overflow-hidden bg-gray-100">
+          <img
+            src={project.images[0]}
+            alt={project.title}
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        </div>
+      )}
+
+      <div className="p-6">
+        <div className="mb-4">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
+          <p className="text-sm text-gray-600 italic">{techStack}{moreCount}</p>
+        </div>
       
       <p className="text-gray-700 mb-4 leading-relaxed">{project.description}</p>
       
@@ -53,6 +65,7 @@ export const ProjectCard = ({ project, onShowDetails, index }: ProjectCardProps)
         >
           More Info
         </Button>
+      </div>
       </div>
     </motion.div>
   );
