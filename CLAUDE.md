@@ -24,19 +24,18 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 The codebase follows **Atomic Design** principles with a clear component hierarchy:
 
 - **Atoms** (`src/components/atoms/`) - Basic building blocks (Button, TechTag, FeatureTag)
-- **Molecules** (`src/components/molecules/`) - Simple combinations (Navigation, ProjectCard, ResumePreview)
-- **Organisms** (`src/components/organisms/`) - Complex sections (Hero, About, Projects, Skills, Education, Contact, Footer, ProjectModal)
+- **Molecules** (`src/components/molecules/`) - Simple combinations (Navigation, ResumePreview)
+- **Organisms** (`src/components/organisms/`) - Complex sections (Hero, About, Projects, Skills, Education, Contact, Footer)
 
 ### Data Management
 - **Centralized data** in `src/data/` with TypeScript interfaces
-- **projects.ts** - Project portfolio data with comprehensive metadata
+- **projects.ts** - Project portfolio data (supports both simple string[] images or ProjectImage[] with businessImpact descriptions)
 - **personal.ts** - Personal info, contact details, skills, and education
-- **Strong typing** via interfaces in `src/types/index.ts`
+- **Strong typing** via interfaces in `src/types/index.ts` (Project, ProjectImage, PersonalInfo, Skill, Education, etc.)
 
 ### Single Page Application
 - **App.tsx** serves as the main layout with all sections rendered sequentially
 - **No routing** - single-page portfolio with smooth scrolling navigation
-- **Modal system** for detailed project views via ProjectModal component
 
 ## Development Guidelines
 
@@ -121,10 +120,10 @@ npm run format
 - Modern gradient backgrounds and hover effects
 
 ### Data Management
-- Project data typed with comprehensive interfaces
-- Contact information and social links configurable
-- Skills and technologies dynamically rendered
-- Modal system for detailed project information
+- Project data typed with comprehensive interfaces (Project, ProjectImage with businessImpact field)
+- Contact information and social links configurable in personal.ts
+- Skills and technologies dynamically rendered from typed data
+- Projects support rich metadata: longDescription, architecture, workflow, technicalDetails, links with optional testCredentials
 
 ## Critical Development Rules
 
