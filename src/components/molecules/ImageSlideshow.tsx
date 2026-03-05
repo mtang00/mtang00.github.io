@@ -36,13 +36,13 @@ export const ImageSlideshow = ({ images, projectTitle }: ImageSlideshowProps) =>
 
   return (
     <div className="space-y-4">
-      <div className="relative bg-gray-100 rounded-lg overflow-hidden min-h-[300px]">
-        <AnimatePresence mode="popLayout">
+      <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
+        <AnimatePresence>
           <motion.img
             key={currentIndex}
             src={currentImage.url}
             alt={`${projectTitle} - ${currentImage.description}`}
-            className="w-full h-auto max-h-[500px] object-contain"
+            className="absolute inset-0 w-full h-full object-contain"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

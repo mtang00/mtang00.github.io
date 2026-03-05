@@ -131,11 +131,11 @@ export const projects: Project[] = [
     title: "Fitness N Conditioning",
     description: "Full-stack fitness tracking Progressive Web App with 386 exercise library, social platform, per-exercise analytics, and competitive leaderboards deployed at fnctracker.com",
     longDescription: `Fitness N Conditioning is a fitness tracking Progressive Web App built with vanilla JavaScript (ES6 modules) and PHP/SQLite, deployed at fnctracker.com.
-    The app features workout tracking with 10-second auto-save and server-side session persistence, a 386-exercise library with demonstration images and muscle group data,
-    per-exercise trend analysis using the Epley 1RM formula with performance charts, a social platform with friends, direct messaging, groups with role-based permissions,
-    and workout activity feeds with emoji reactions. The leaderboard uses a multi-component scoring algorithm factoring volume, intensity, consistency multiplier, and PR bonuses.
-    Additional features include workout templates with sharing, a workout calendar, interactive muscle diagram visualization, plateau detection via EWMA algorithm,
-    and goal tracking across five categories. Built with 25 ES6 modules using dependency injection, 37 PHP API endpoints, and a 33-table SQLite database with auto-migration.`,
+    The app features workout tracking with auto-save and server-side session persistence, a 386-exercise library with demonstration images and muscle group data,
+    per-exercise trend analysis with estimated 1RM tracking and performance charts, a social platform with friends, direct messaging, groups with role-based permissions,
+    and workout activity feeds with emoji reactions. The leaderboard uses a multi-component scoring algorithm factoring volume, intensity, consistency, and PR bonuses.
+    Additional features include workout templates with sharing, a workout calendar, interactive muscle diagram visualization, plateau detection,
+    and goal tracking across five categories. Built with ES6 modules using dependency injection, a PHP REST API, and a SQLite database with auto-migration.`,
 
     technologies: [
       "Vanilla JavaScript (ES6)",
@@ -150,30 +150,30 @@ export const projects: Project[] = [
     features: [
       "📊 Dashboard with cumulative progress stats, workout streaks, and recent session summaries",
       "🏋️ 386-exercise library with demonstration images, primary/secondary muscle groups, and personal performance stats",
-      "📈 Per-exercise trend analysis with Epley 1RM estimation, performance charts, and trend indicators (Improving/Stable/Declining)",
+      "📈 Per-exercise trend analysis with estimated 1RM tracking, performance charts, and trend indicators",
       "📋 Workout templates with favorites, share codes, and one-tap session start",
       "📅 Workout calendar with daily completion indicators for consistency tracking",
-      "🏆 Multi-timeframe leaderboards (daily, weekly, monthly, all-time) with 5-component scoring algorithm",
-      "👥 Social platform: friends with online/away/offline status, direct messaging, groups with admin/member roles, emoji reactions",
-      "💪 Interactive SVG muscle diagram with 12 muscle groups showing per-exercise progress and trend percentages",
-      "📱 Responsive PWA with mobile bottom navigation and 44px WCAG touch targets for gym use",
-      "🎯 Goal system across 5 categories: strength (1RM), cardio (distance/duration), body composition, consistency, progressive overload"
+      "🏆 Multi-timeframe leaderboards (daily, weekly, monthly, all-time) with fair scoring that rewards consistency and personal improvement",
+      "👥 Social platform: friends with online status, direct messaging, groups with roles, emoji reactions, and live workout spectating",
+      "💪 Interactive SVG muscle diagram showing exercise coverage and progress trends across muscle groups",
+      "📱 Responsive PWA with mobile bottom navigation for gym use",
+      "🎯 Goal system across strength, cardio, body composition, consistency, and progressive overload categories"
     ],
 
     architecture: {
-      frontend: "Single Page Application with 25 ES6 modules loaded via dependency injection (module-init.js orchestrator)",
-      backend: "PHP REST API with 37 endpoints handling auth, workouts, exercises, goals, social, leaderboard, trends, templates, groups, messages, notifications, weight tracking, and reactions",
-      database: "SQLite3 with 33 tables, auto-migration on first request, foreign key cascades, and comprehensive indexing",
-      deployment: "Docker containerization for local dev, deployed to Namecheap shared hosting via SFTP with cache-busting system"
+      frontend: "Single Page Application with ES6 modules loaded via dependency injection pattern",
+      backend: "PHP REST API with endpoints for auth, workouts, exercises, goals, social, leaderboard, trends, templates, groups, messages, notifications, and more",
+      database: "SQLite3 with 33 tables, auto-migration, foreign key cascades, and comprehensive indexing",
+      deployment: "Docker for local development, deployed via SFTP with cache-busting system"
     },
 
     highlights: [
-      "5-component workout scoring: volume, intensity, metabolic, technique, and power scores with bodyweight exercise multipliers (pull-up 3.0x, dip 2.0x, human flag 4.0x) and unilateral 2x bonus",
-      "10-second auto-save with hash-based change detection, server-side session persistence, and cross-device restore within 24 hours",
-      "Plateau detection using EWMA (exponential weighted moving average) algorithm with per-exercise consecutive-use tracking",
-      "Social platform with HTTP polling (3s messages, 30s activity/notifications), online status derived from last_seen timestamps, and workout spectating",
+      "Multi-component workout scoring with volume, intensity, metabolic, technique, and power factors plus bodyweight exercise multipliers and unilateral bonuses",
+      "Auto-save with hash-based change detection and server-side session persistence for cross-device workout restore",
+      "Plateau detection using exponential weighted moving average (EWMA) algorithm with per-exercise tracking",
+      "Social platform with online status polling, friend activity feeds, direct messaging, group challenges, and live workout spectating",
       "Responsive PWA with service worker caching, installable on mobile/desktop, and identical feature set across screen sizes",
-      "33-table relational database with cascading deletes, unique constraints on friendships/reactions/sessions, and auto-migration system"
+      "Relational database with cascading deletes, unique constraints, comprehensive indexing, and auto-migration on first request"
     ],
 
     links: {
@@ -187,63 +187,63 @@ export const projects: Project[] = [
     images: [
       {
         url: "/assets/fitness-tracker/fnc_pc_home.png",
-        description: "Dashboard - Progress Tracking & Workout Streak",
-        businessImpact: "Centralized fitness dashboard with \"Progress Since Day 1\" panel showing exercises improved, best exercise gain percentage, and total days tracking. Weekly stats cards display workout count, total weight lifted, and workout time. Workout streak banner and recent workout cards with exercise/set/weight summaries provide at-a-glance progress, with a one-click button to start a new session."
+        description: "Dashboard - Progress Tracking & Workout Streaks",
+        businessImpact: "See your fitness journey at a glance — track how many exercises you've improved, your overall improvement percentage, and how long you've been training. Stay motivated with workout streak banners, weekly summaries of workouts completed, weight lifted, and time spent. Recent workout cards let you review past sessions instantly, and a single button gets you into your next workout."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_exercises.png",
-        description: "Exercise Library - 386 Exercises with Visual Cards",
-        businessImpact: "Searchable exercise database with 386 library entries displayed as visual cards with demonstration images, primary/secondary muscle groups, equipment type, and personal stats (max weight, last used date, workout count). Category, source, and sort filters enable rapid exercise discovery. Each card shows Library/Custom source tags and strength classification badges for building balanced programs."
+        description: "Exercise Library - Browse & Discover Exercises",
+        businessImpact: "Explore a library of 386 exercises with demonstration images showing proper form, tagged by muscle group, equipment type, and difficulty. Your personal stats appear on each exercise — max weight, when you last performed it, and how many workouts include it — so you can easily find exercises you haven't done recently or discover new ones to try."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_leaderboard.png",
-        description: "Competitive Leaderboard - Multi-Timeframe Rankings",
-        businessImpact: "Multi-timeframe leaderboard (Daily, Weekly, Monthly, All Time) ranking users by fitness score with workout count, consistency multiplier, and PR bonus percentages displayed per user. View Workouts and View Profile buttons enable social discovery. The 5-component scoring algorithm with bodyweight multipliers and unilateral bonuses creates fair rankings across all fitness levels."
+        description: "Leaderboard - Compete with Friends",
+        businessImpact: "Compete with friends across daily, weekly, monthly, and all-time rankings. The scoring system rewards consistency and personal improvement, not just raw strength — so beginners and advanced lifters can compete fairly. See everyone's workout count, score breakdown, and PR bonuses, and tap into their workouts or profiles to stay connected."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_social.png",
-        description: "Social Hub - Friends, Groups, Messaging & Activity Feed",
-        businessImpact: "Social platform with Friends, Groups, Discover, Messages, and Activity tabs. Real-time online status tracking (Online/Away/Offline indicators) derived from last-seen timestamps via 30-second polling. Friend cards show avatar initials, username, and one-click actions (Message, Workouts, Profile, Remove). Sortable by activity for quick engagement with training partners."
+        description: "Social Hub - Train Together",
+        businessImpact: "Stay connected with your training partners through friends, groups, messaging, and activity feeds. See who's online, away, or offline at a glance, and jump straight into messaging or viewing someone's workouts. Sort friends by recent activity to keep up with who's been putting in work and who might need a nudge."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_trends1.png",
-        description: "Exercise Trends - Recent Sets & Performance History",
-        businessImpact: "Per-exercise analytics modal showing recent sessions with date, sets, best set (weight x reps), estimated 1RM via Epley formula, and volume. Time period filters (All Time, 1 Year, 6 Months, 3 Months, 1 Month, YTD) and configurable chart metric enable granular progress tracking. Trend indicator (Improving/Stable/Declining) based on 28-day rolling averages provides quick performance assessment."
+        description: "Exercise Trends - Track Your Lifts Over Time",
+        businessImpact: "Dive into your performance history for any exercise — see your recent sessions with sets, weights, estimated 1RM, and total volume side by side. Filter by time period to zoom in on recent progress or zoom out for the big picture. A trend indicator instantly tells you if you're improving, stable, or declining so you know when to push harder or deload."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_trends2.png",
-        description: "Performance Chart - Estimated 1RM Progression Over Time",
-        businessImpact: "Interactive canvas-rendered line chart plotting estimated 1RM progression over time. Stat cards show total workouts for the exercise, estimated max 1RM, current 1RM, percentage change, max weight, and max reps. Visual representation of strength gains helps users adjust training intensity based on trend data and identify plateaus early."
+        description: "Performance Charts - Visualize Your Strength Gains",
+        businessImpact: "Watch your estimated 1RM climb over time with interactive performance charts. At-a-glance stat cards show your max, current level, and percentage change so you can see exactly how far you've come. Spot plateaus early and make informed decisions about when to change your programming."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_home.png",
-        description: "Mobile Dashboard - Responsive PWA Design",
-        businessImpact: "Mobile-optimized Progressive Web App at fnctracker.com with bottom navigation bar, condensed progress panel, and streak notifications. Identical feature set to desktop in a touch-friendly layout with 44px WCAG touch targets. Bottom nav (Dashboard, Workout, Leaderboard, Social, Exercises, Settings) provides thumb-reachable navigation for gym-floor usage."
+        description: "Mobile Dashboard - Your Gym Companion",
+        businessImpact: "Take your full dashboard to the gym as an installable Progressive Web App. The mobile layout puts everything within thumb's reach — progress stats, streak notifications, and quick navigation to workouts, leaderboard, social, and exercises through the bottom nav bar."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_exercise.png",
-        description: "Mobile Workout - Set-by-Set Tracking with Auto-Save",
-        businessImpact: "Active workout interface with exercise name, reps/weight input fields, and Add Set button. Template label shows the workout was loaded from a saved template. Auto-save runs every 10 seconds with hash-based change detection and server-side session persistence, preventing data loss during network issues. Floating action buttons enable quick exercise addition mid-workout."
+        description: "Mobile Workout - Log Sets on the Gym Floor",
+        businessImpact: "Log your sets between exercises with a clean, distraction-free interface. Load a saved template to skip setup entirely, then just tap in your reps and weight after each set. Auto-save keeps your data safe even if you lose connection or your phone dies mid-workout."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_recents.png",
-        description: "Mobile Recent Workouts - Session History",
-        businessImpact: "Scrollable workout history showing session cards with relative date labels, template tags, exercise count, sets, duration, total weight lifted, and exercise list previews. View Calendar button links to the monthly workout calendar. Quick access to historical sessions enables workout comparison and progressive overload planning."
+        description: "Recent Workouts - Review Past Sessions",
+        businessImpact: "Scroll through your workout history to see what you did last session, last week, or last month. Each card shows exercises, sets, duration, and total weight at a glance, with template tags so you can quickly identify your routine. Use past sessions as a reference to plan progressive overload for your next workout."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_calendar.png",
-        description: "Workout Calendar - Monthly Consistency View",
-        businessImpact: "Visual monthly calendar with green dot indicators marking workout days. Helps users identify rest days, track weekly frequency, and maintain training schedules. Simple visual format makes consistency patterns immediately obvious, reinforcing habit formation and supporting the consistency goal category."
+        description: "Workout Calendar - See Your Consistency",
+        businessImpact: "A simple monthly calendar view marks every day you trained. Instantly spot your patterns — rest days, training frequency, and streaks. Seeing a month full of completed workouts is one of the best motivators to keep showing up."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_friends.png",
-        description: "Mobile Friend Activity - Social Workout Feed",
-        businessImpact: "Friend activity feed showing workout summaries with avatar, name, date, workout type tag, and stats (exercises, sets, weight, minutes). Expandable cards reveal full workout details. Social visibility of friends' training creates accountability and supports the workout spectating feature where users can watch in-progress sessions."
+        description: "Friend Activity - See What Your Friends Are Training",
+        businessImpact: "Keep up with your friends' workouts in a social feed — see what muscle groups they hit, how many sets they did, and how heavy they went. Tap into any workout for the full breakdown. Knowing your friends are training creates accountability that keeps everyone coming back."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_template.png",
-        description: "Mobile Workout Templates - Quick Start from Saved Routines",
-        businessImpact: "Template selection interface with recent templates list showing saved routines with share, favorite, edit, and delete actions. Templates store exercise selections with suggested sets, reps, and weights, enabling one-tap workout start. Share codes allow users to distribute templates to friends and group members."
+        description: "Workout Templates - Start Training in Seconds",
+        businessImpact: "Save your favorite routines as templates and start a workout with a single tap. Share templates with friends via share codes so your whole group can follow the same program. No more re-entering the same exercises every session — just pick a template and go."
       }
     ],
 
@@ -260,10 +260,10 @@ export const projects: Project[] = [
     technicalDetails: {
       lines: "50,000+",
       files: "76 (25 JS modules, 37 PHP API endpoints, 14 CSS files)",
-      apiEndpoints: "37 PHP endpoints covering auth, workouts, exercises, goals, friends, messages, groups, challenges, leaderboard, trends, templates, notifications, reactions, weight, achievements, plateau detection, and personal averages",
-      databaseTables: "33 tables (workouts, workout_exercises, sets, exercises, default_exercises, users, user_preferences, goals, goal_progress, friendships, messages, groups, group_members, group_invitations, group_join_requests, group_challenges, challenge_participants, challenge_progress, workout_templates, template_exercises, weight_entries, notifications, reactions, achievements, workout_scores, exercise_performance, personal_exercise_averages, plateau_data, workout_sessions, workout_spectators, remember_tokens, cardio_sessions, email_verifications)",
-      moduleSystem: "25 ES6 modules with dependency injection via module-init.js orchestrator — PointsCalculator, WorkoutManager, ExerciseManager, SocialManager, TrendsManager, TemplatesManager, GoalsManager, GroupsManager, ChallengesManager, WeightManager, ProgressManager, SpectateManager, NotificationsManager, ReactionsManager, and others",
-      testingApproach: "Manual testing with Docker for local development and SFTP deployment to Namecheap shared hosting with cache-busting"
+      apiEndpoints: "37 PHP endpoints covering auth, workouts, exercises, goals, friends, messages, groups, challenges, leaderboard, trends, templates, notifications, reactions, weight, achievements, and plateau detection",
+      databaseTables: "33 tables covering workouts, exercises, sets, users, goals, friendships, messages, groups, challenges, templates, weight tracking, notifications, reactions, achievements, scoring, session persistence, and more",
+      moduleSystem: "ES6 modules with dependency injection — PointsCalculator, WorkoutManager, SocialManager, TrendsManager, TemplatesManager, GoalsManager, GroupsManager, ChallengesManager, WeightManager, SpectateManager, NotificationsManager, ReactionsManager, and others",
+      testingApproach: "Manual testing with Docker for local development, deployed via SFTP with cache-busting"
     }
   }
 ];
