@@ -11,161 +11,87 @@ Modern portfolio website built with React 18, TypeScript, Vite, Tailwind CSS, an
 
 ## Tech Stack
 
-- **React 18** - Modern React with hooks and concurrent features
-- **TypeScript** - Type safety and better developer experience
-- **Vite** - Fast build tool and development server
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Professional animations and transitions
+- **React 18** with hooks and concurrent features
+- **TypeScript** in strict mode (no implicit any, strict null checks, noUnusedLocals/Parameters)
+- **Vite 5** - Dev server on port 3000, auto-opens browser
+- **Tailwind CSS 3** - Utility-first with custom color palette (primary blue, secondary indigo)
+- **Framer Motion 11** - All animations and transitions
 - **ESLint + Prettier** - Code quality and formatting
+
+## Development Commands
+
+```bash
+npm run dev            # Start dev server (port 3000)
+npm run build          # TypeScript check + Vite production build
+npm run preview        # Preview production build
+npm run type-check     # TypeScript without emit
+npm run lint           # ESLint with strict warnings
+npm run format         # Prettier formatting
+npm run deploy         # Build + deploy via gh-pages package
+```
 
 ## Architecture Overview
 
-### Component Structure
-The codebase follows **Atomic Design** principles with a clear component hierarchy:
+### Single Page Application Layout
 
-- **Atoms** (`src/components/atoms/`) - Basic building blocks (Button, TechTag, FeatureTag)
-- **Molecules** (`src/components/molecules/`) - Simple combinations (Navigation, ResumePreview)
-- **Organisms** (`src/components/organisms/`) - Complex sections (Hero, About, Projects, Skills, Education, Contact, Footer)
+App.tsx renders all sections sequentially (no routing):
 
-### Data Management
-- **Centralized data** in `src/data/` with TypeScript interfaces
-- **projects.ts** - Project portfolio data (supports both simple string[] images or ProjectImage[] with businessImpact descriptions)
-- **personal.ts** - Personal info, contact details, skills, and education
-- **Strong typing** via interfaces in `src/types/index.ts` (Project, ProjectImage, PersonalInfo, Skill, Education, etc.)
+1. **Navigation** - Fixed sticky header, smooth scroll to hash anchors (#about, #projects, etc.)
+2. **Hero** - Animated code background, gradient text, floating shapes
+3. **About** - Personal bio
+4. **Projects** - Grid of ProjectCards that open ProjectModal on click
+5. **Skills** - Color-coded skill badges grouped by category
+6. **Education** - University details with coursework grid
+7. **Contact** - Email, GitHub, LinkedIn, resume links
+8. **Footer** - Copyright
 
-### Single Page Application
-- **App.tsx** serves as the main layout with all sections rendered sequentially
-- **No routing** - single-page portfolio with smooth scrolling navigation
+### Component Structure (Atomic Design)
 
-## Development Guidelines
+- **Atoms** (`src/components/atoms/`) - Button, TechTag, FeatureTag
+- **Molecules** (`src/components/molecules/`) - Navigation, ProjectCard, ResumePreview, ImageSlideshow
+- **Organisms** (`src/components/organisms/`) - Hero, About, Projects, ProjectModal, Skills, Education, Contact, Footer
 
-### Code Quality Rules
-- **NEVER add comments** unless explicitly requested by the user
-- **Check for duplicate functions** before adding new functionality - search existing codebase first
-- **Use TypeScript interfaces** for all data structures and props
-- **Follow React best practices** - hooks, functional components, proper state management
-- **Prefer composition over inheritance** - small, reusable components
+### Data Layer
 
-### Component Architecture
-- **Single Responsibility** - Each component has one clear purpose
-- **Type Safety** - All props, state, and function parameters properly typed
-- **Performance** - Use React.memo, useMemo, useCallback when appropriate
+All content is centralized in `src/data/` with TypeScript interfaces from `src/types/index.ts`:
 
-### Animation Guidelines
-- **Framer Motion** - Primary animation library for all transitions
-- **Performance First** - Use transform and opacity for smooth animations
-- **Accessibility** - Respect prefers-reduced-motion settings
-- **Progressive Enhancement** - Ensure functionality works without animations
+- **projects.ts** - Portfolio project entries. Each Project has: id, title, description, longDescription, technologies, features, architecture (frontend/backend/database/deployment), highlights, links (with optional testCredentials), images (string[] or ProjectImage[] with businessImpact), workflow steps, and technicalDetails (lines, files, apiEndpoints, databaseTables, moduleSystem, testingApproach).
+- **personal.ts** - PersonalInfo, contactInfo, skills (categorized: Frontend, Backend, Database, Tools & DevOps, Concepts), education.
 
-### Actual File Structure
-```
-src/
-├── components/          # Reusable UI components
-│   ├── atoms/          # TechTag, FeatureTag, Button
-│   ├── molecules/      # Navigation, ProjectCard, ResumePreview
-│   └── organisms/      # Hero, About, Projects, Skills, Education, Contact, Footer, ProjectModal
-├── data/               # Static data and configuration (projects.ts, personal.ts)
-├── types/              # TypeScript interfaces (index.ts)
-├── styles/             # Global styles (globals.css)
-└── main.tsx            # React app entry point
-```
+### Modal System
 
-### Development Commands
+**ProjectModal** is the main interactive component - displays full project details with:
+- ImageSlideshow (keyboard nav with arrow keys, dot indicators, business impact descriptions)
+- Architecture breakdown, feature list, workflow steps
+- Live demo links and test credentials display
+- Escape key / background click to close, AnimatePresence for enter/exit
 
-```bash
-# Start development server
-npm run dev
+**ResumePreview** - Floating trigger that opens full-screen PDF viewer modal with download button.
 
-# Build for production
-npm run build
+### Utilities
 
-# Preview production build
-npm run preview
+- `src/utils/analytics.ts` - Google Analytics wrapper (trackEvent, trackPageView, trackProjectView, trackContactClick). GA ID: G-RCGRH3NVP8.
 
-# Type checking
-npm run type-check
+## Portfolio Projects
 
-# Lint code
-npm run lint
+Two projects are showcased, defined in `src/data/projects.ts`:
 
-# Format code
-npm run format
-```
+### PRO Fence Naperville (`pro-fence`)
+Full-stack business management system for a fencing company. React/TypeScript frontend, C#/.NET backend, SQL Server database. Features SVG fence sketch editor, PDF estimate generation, customer/inventory management.
 
-### TypeScript Best Practices
-- **Strict mode enabled** - No implicit any, strict null checks
-- **Interface over type** - Use interfaces for object shapes
-- **Generic components** - Make components reusable with generics
-- **Proper typing** - Event handlers, refs, children props
-
-### Performance Optimization
-- **Code splitting** - Lazy load routes and heavy components
-- **Image optimization** - Use modern formats and proper sizing
-- **Bundle analysis** - Keep bundle size minimal
-- **Memoization** - Strategic use of React optimization hooks
-
-### Styling Guidelines
-- **Tailwind CSS** - Utility-first approach for consistent design
-- **Responsive design** - Mobile-first approach with breakpoints
-- **Dark mode ready** - Design system supports theme switching
-- **Component variants** - Use className patterns for component states
-
-## Project-Specific Notes
-
-### Portfolio Features
-- Dynamic project loading from TypeScript data
-- Professional animations for user interactions
-- Responsive design for all screen sizes
-- Accessible navigation and interactions
-- Modern gradient backgrounds and hover effects
-
-### Data Management
-- Project data typed with comprehensive interfaces (Project, ProjectImage with businessImpact field)
-- Contact information and social links configurable in personal.ts
-- Skills and technologies dynamically rendered from typed data
-- Projects support rich metadata: longDescription, architecture, workflow, technicalDetails, links with optional testCredentials
+### FitTracker Pro (`fitness-tracker`)
+Full-stack fitness tracking Progressive Web App at **fnctracker.com**. Vanilla JavaScript ES6 modules frontend, PHP/SQLite backend, Docker deployment. 15,000+ lines of code, 800+ exercise library, social features (friends/messaging/groups), goal tracking, gamification with fitness score algorithm, workout templates, leaderboards. Test credentials: username `test`, password `test`.
 
 ## Critical Development Rules
 
-1. **NEVER add comments** - Code should be self-documenting
-2. **Check for duplicates** - Search before implementing new functions
-3. **Type everything** - No `any` types unless absolutely necessary
-4. **Performance matters** - Optimize for speed and user experience
-5. **Accessibility first** - Follow WCAG guidelines
-6. **Mobile responsive** - Test on various screen sizes
-7. **Clean code** - Prefer readability and maintainability
-
-## Animation Patterns
-
-### Page Transitions
-- Smooth fade-in animations for page loads
-- Staggered animations for lists and grids
-- Parallax effects for hero sections
-- Hover animations for interactive elements
-
-### Component Animations
-- Button hover states with scale transforms
-- Card animations with shadow and scale effects
-- Modal entrance/exit animations
-- Scroll-triggered animations for sections
+1. **NEVER add comments** unless explicitly requested - code should be self-documenting
+2. **Check for duplicates** - Search existing codebase before implementing new functions
+3. **Type everything** - No `any` types unless absolutely necessary; use interfaces for object shapes
+4. **Framer Motion for all animations** - Use transform/opacity for performance; respect prefers-reduced-motion
+5. **Mobile-first responsive** - Tailwind breakpoints (sm, md, lg)
 
 ## Deployment
 
-### GitHub Pages with Actions
-- **Automatic deployment** via GitHub Actions on push to `main` branch
-- **Workflow file:** `.github/workflows/deploy.yml`
-- **Build process:** TypeScript compilation → Vite build → GitHub Pages deploy
-- **Manual deployment:** `npm run deploy` (uses gh-pages package)
-- **Alternative script:** `./deploy.sh` for manual deployment
-
-### Build Commands
-- `npm run build` - Production build with TypeScript checking
-- `npm run deploy` - Manual deployment to GitHub Pages
-- `npm run deploy-manual` - Alternative deployment via shell script
-
-### Key TypeScript Configuration
-- **Strict mode enabled** with `noUnusedLocals` and `noUnusedParameters`
-- **Target:** ES2020 with modern browser support
-- **Module resolution:** Bundler mode for Vite compatibility
-
-Remember: Build fast, type-safe, and beautiful. Always prioritize user experience and performance.
+- **Automatic:** GitHub Actions (`.github/workflows/deploy.yml`) deploys on push to `main` - runs npm ci, build, then deploys dist/ to GitHub Pages
+- **Manual:** `npm run deploy` or `./deploy.sh`
+- **TypeScript config:** Target ES2020, bundler module resolution for Vite compatibility

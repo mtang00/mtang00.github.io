@@ -128,13 +128,13 @@ export const projects: Project[] = [
   },
   {
     id: "fitness-tracker",
-    title: "FitTracker Pro",
-    description: "Full-stack fitness tracking Progressive Web App with 800+ exercise library, social features, goal tracking, and gamification system",
-    longDescription: `FitTracker Pro is a production-ready fitness tracking application built with vanilla JavaScript and PHP/SQLite.
-    The Progressive Web App features comprehensive workout management with auto-save, an extensive exercise database with 800+ library
-    exercises plus custom creation, multi-category goal system with smart baselines, social features including friends/messaging/groups,
-    workout templates, weight tracking with trend analysis, and competitive leaderboards. Built with ES6 module architecture, dependency
-    injection, and deployed at fnctracker.com with cache-busting for mobile performance.`,
+    title: "Fitness N Conditioning",
+    description: "Full-stack fitness tracking Progressive Web App with 800+ exercise library, social features, advanced analytics, and competitive leaderboards",
+    longDescription: `Fitness N Conditioning is a production-ready fitness tracking Progressive Web App built with vanilla JavaScript and PHP/SQLite, deployed at fnctracker.com with active users.
+    Features comprehensive workout management with auto-save and templates, an extensive exercise database with 800+ library exercises plus custom creation,
+    per-exercise trend analysis with estimated 1RM tracking and performance charts, social platform with friends/messaging/groups and activity feeds,
+    competitive leaderboards with a fair fitness score algorithm (factoring weight lifted, consistency, and PR bonuses), workout calendar with streak tracking,
+    and muscle diagram progress visualization. Built with ES6 module architecture, dependency injection, and cache-busting deployment for mobile performance.`,
 
     technologies: [
       "Vanilla JavaScript",
@@ -147,16 +147,16 @@ export const projects: Project[] = [
     ],
 
     features: [
-      "📊 Comprehensive workout tracking with timer and auto-save",
-      "🏋️ 800+ exercise database with custom exercise creation",
-      "🎯 Multi-category goal system (strength, cardio, body composition, consistency)",
-      "👥 Social features: friends, messaging, groups with roles",
-      "⚔️ Fair competition system with fitness score algorithm",
-      "📈 Advanced workout trends and personal analytics",
-      "📋 Workout templates with favorites and usage tracking",
-      "🏆 Multi-timeframe leaderboards (daily, weekly, monthly, all-time)",
-      "📱 Progressive Web App with offline capabilities",
-      "🔐 Secure authentication with remember me functionality"
+      "📊 Dashboard with progress tracking, workout streaks, and weekly stats (workouts, weight lifted, time)",
+      "🏋️ 800+ exercise library with images, muscle groups, equipment tags, and personal stats",
+      "📈 Per-exercise trend analysis with estimated 1RM charts, performance history, and trend indicators",
+      "📋 Workout templates with favorites, sharing, and one-tap session start",
+      "📅 Workout calendar with daily indicators and monthly consistency view",
+      "🏆 Multi-timeframe leaderboards (daily, weekly, monthly, all-time) with fair scoring algorithm",
+      "👥 Social platform: friends with online status, direct messaging, groups, and activity feeds",
+      "💪 Muscle diagram visualization showing exercise coverage and progress",
+      "📱 Responsive PWA with mobile-optimized layout and bottom navigation for gym use",
+      "🔐 Secure authentication with remember me and profile customization"
     ],
 
     architecture: {
@@ -167,12 +167,12 @@ export const projects: Project[] = [
     },
 
     highlights: [
-      "Modular architecture with dependency injection pattern enhancing monolithic app",
-      "Fitness score algorithm: total_weight_lifted + (workout_count × 500) for fair rankings",
-      "Real-time social features with online status tracking and friend activity",
-      "Advanced analytics with INOL formula for strength and duration/distance for cardio",
-      "Mobile-first responsive design with 44px WCAG touch targets",
-      "Production deployment at fnctracker.com with 800+ exercises and active users"
+      "Modular ES6 architecture with dependency injection pattern across 40+ JavaScript modules",
+      "Fair leaderboard scoring with consistency multiplier and PR bonus percentages to rank all fitness levels",
+      "Full social platform: friends with online status, direct messaging, groups with roles, and workout activity feeds",
+      "Per-exercise analytics with estimated 1RM tracking, performance charts, and trend indicators (Improving/Stable/Declining)",
+      "Responsive PWA with identical feature set on desktop and mobile, 44px WCAG touch targets, bottom nav for gym-floor use",
+      "Production deployment at fnctracker.com with 30+ PHP API endpoints, 15+ database tables, and active users"
     ],
 
     links: {
@@ -185,14 +185,64 @@ export const projects: Project[] = [
 
     images: [
       {
-        url: "/assets/fitness-tracker-dashboard.png",
-        description: "Dashboard - Workout Summary & Quick Actions",
-        businessImpact: "Centralized fitness dashboard displaying recent workouts, active goals, and quick-access navigation. Real-time workout summary with sets completed, total weight lifted, and workout duration eliminates manual tracking in notebooks. One-tap navigation to Exercises, Workouts, Goals, and Social features reduces friction in daily logging. Quick action buttons (Start Workout, Add Exercise, Set Goal) enable users to begin tracking in under 3 seconds, increasing daily engagement by an estimated 40%."
+        url: "/assets/fnc_pc_home.png",
+        description: "Dashboard - Progress Tracking & Workout Streak",
+        businessImpact: "Centralized fitness dashboard with \"Progress Since Day 1\" panel showing 18 exercises improved, +143.8% best exercise gain, and 263 days tracking. Weekly stats cards display 6 workouts, 50,840 lbs total weight lifted, and 4h 30m workout time. Workout streak banner (4-day streak) and recent workout cards with exercise/set/weight summaries provide at-a-glance progress. \"Create New Workout\" button enables one-click session start, reducing friction in daily logging."
       },
       {
-        url: "/assets/fitness-tracker-workout.png",
-        description: "Workout Tracker with Auto-Save & Timer",
-        businessImpact: "Interactive workout builder with real-time exercise search from 800+ library database and custom exercises. Set-by-set tracking with weight, reps, duration, and distance support for both strength and cardio training. Built-in timer with auto-save every 30 seconds prevents data loss during network issues or battery drain. Per-exercise effort rating (1-10) enables advanced analytics and personal best tracking. Replaces paper workout logs and reduces workout recording time from 10 minutes to 2 minutes, while providing historical data for progress analysis."
+        url: "/assets/fnc_pc_exercises.png",
+        description: "Exercise Library - 800+ Exercises with Visual Cards",
+        businessImpact: "Searchable exercise database with 800+ library entries displayed as visual cards with demonstration images, primary/secondary muscle groups, equipment type, and personal stats (max weight, last used date, workout count). Category/source/sort filters enable rapid exercise discovery. Each card shows Library/Custom source tags and strength classification badges, helping users build balanced training programs."
+      },
+      {
+        url: "/assets/fnc_pc_leaderboard.png",
+        description: "Competitive Leaderboard - Weekly Rankings with Fitness Scores",
+        businessImpact: "Multi-timeframe leaderboard (Daily, Weekly, Monthly, All Time) ranking users by fitness score with workout count, consistency multiplier, and PR bonus percentages. View Workouts and View Profile buttons enable social discovery. Fair scoring algorithm factors total weight lifted, workout frequency, and personal record improvements to prevent advanced lifters from dominating rankings, encouraging engagement across all fitness levels."
+      },
+      {
+        url: "/assets/fnc_pc_social.png",
+        description: "Social Hub - Friends, Groups, Messaging & Activity Feed",
+        businessImpact: "Full social platform with Friends (12 connections), Groups, Discover, Messages, and Activity tabs. Real-time online status tracking (Online/Away/Offline indicators) with last-active timestamps. Friend cards show avatar initials, username, and one-click actions (Message, Workouts, Profile, Remove). Sortable by activity for quick engagement with active training partners, building accountability and community retention."
+      },
+      {
+        url: "/assets/fnc_pc_trends1.png",
+        description: "Exercise Trends - Recent Sets & Performance History",
+        businessImpact: "Per-exercise analytics modal showing last 5 sessions with date, sets, best set (weight x reps), estimated 1RM, and volume. Time period filters (All Time, 1 Year, 6 Months, 3 Months, 1 Month, YTD) and chart metric selector (Estimated 1RM) enable granular progress tracking. Trend indicator (STABLE) provides quick performance assessment without deep analysis."
+      },
+      {
+        url: "/assets/fnc_pc_trends2.png",
+        description: "Performance Chart - 1RM Progression Over Time",
+        businessImpact: "Interactive line chart plotting estimated 1RM progression from 342 lbs to 385 lbs over 6 months. Stat cards show total workouts (36), estimated max 1RM (397 lbs), current 1RM (385 lbs), 1RM change (+7.0%), max weight (340 lbs), and max reps (10). Visual proof of strength gains over time helps users stay motivated and adjust training intensity based on trend data."
+      },
+      {
+        url: "/assets/fnc_mobile_home.png",
+        description: "Mobile Dashboard - Responsive PWA Design",
+        businessImpact: "Mobile-optimized Progressive Web App running at fnctracker.com with bottom navigation bar, condensed progress panel, and streak notifications. Same full feature set as desktop in a touch-friendly layout with 44px WCAG touch targets. Bottom nav icons (Dashboard, Workout, Leaderboard, Social, Exercises, Settings) provide thumb-reachable navigation for gym-floor usage."
+      },
+      {
+        url: "/assets/fnc_mobile_exercise.png",
+        description: "Mobile Workout - Set-by-Set Tracking with Auto-Save",
+        businessImpact: "Active workout interface with exercise name, reps/weight input fields, and Add Set button. Template label (Push2) shows workout loaded from saved template. Auto-save indicator and floating action buttons (+, save) enable quick set logging between exercises. Minimal UI reduces distraction during active training while capturing all data points for analytics."
+      },
+      {
+        url: "/assets/fnc_mobile_recents.png",
+        description: "Mobile Recent Workouts - Session History with Details",
+        businessImpact: "Scrollable workout history showing session cards with date labels (Today, Yesterday), template tags (Pull2, Push3), exercise count, sets, duration, total weight, and exercise list preview. View Calendar button links to monthly workout calendar. Delete option per workout for data management. Quick access to historical sessions enables workout comparison and progressive overload planning."
+      },
+      {
+        url: "/assets/fnc_mobile_calendar.png",
+        description: "Workout Calendar - Monthly Training Consistency View",
+        businessImpact: "Visual monthly calendar with green dot indicators marking workout days. February 2026 view shows near-daily training consistency. Calendar view helps users identify rest days, track weekly frequency, and maintain training schedules. Simple visual format makes consistency patterns immediately obvious, reinforcing habit formation."
+      },
+      {
+        url: "/assets/fnc_mobile_friends.png",
+        description: "Mobile Friend Activity - Social Workout Feed",
+        businessImpact: "Friend activity feed showing workout summaries with avatar, name, date, workout type tag (Chest), and stats (exercises, sets, lbs, minutes). \"Tap for details\" expands full workout breakdown. Social visibility of friends' training creates accountability and friendly competition, driving consistent app usage and workout frequency among connected users."
+      },
+      {
+        url: "/assets/fnc_mobile_template.png",
+        description: "Mobile Workout Templates - Quick Start from Saved Routines",
+        businessImpact: "Template selection interface with \"Start from Template\" option and recent templates list showing saved routines (Legs) with share, favorite, edit, and delete actions. Add Template button for creating new routines. Templates reduce workout setup time from 5 minutes to 10 seconds by pre-loading exercise selections, sets, and weights from previous sessions."
       }
     ],
 
@@ -207,11 +257,11 @@ export const projects: Project[] = [
 
     technicalDetails: {
       lines: "15,000+",
-      files: "40+",
-      apiEndpoints: "20+ REST endpoints",
-      databaseTables: "15+ tables (users, exercises, workouts, goals, social, templates)",
-      moduleSystem: "ES6 modules with dependency injection pattern",
-      testingApproach: "Manual testing with automated deployment and cache-busting"
+      files: "60+ (40+ JS modules, 30+ PHP API endpoints)",
+      apiEndpoints: "30+ REST endpoints (auth, workouts, exercises, goals, social, leaderboard, trends, templates, groups, messages, notifications, weight, reactions)",
+      databaseTables: "15+ tables (users, exercises, workouts, workout_sets, goals, friends, messages, groups, group_members, templates, weight_logs, notifications, reactions, achievements)",
+      moduleSystem: "ES6 modules with dependency injection pattern and module-init.js orchestrator",
+      testingApproach: "Production deployment with cache-busting system and Docker containerization"
     }
   }
 ];
