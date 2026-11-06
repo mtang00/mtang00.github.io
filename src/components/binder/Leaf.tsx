@@ -89,6 +89,30 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
    */
   const sag = useTransform(upright, [0, 1], [0, 1.8]);
 
+  /*
+   * Each face floats a hair off the page plane, along its own normal.
+   *
+   * Without this the turning sheet passes *behind* the page it is landing on.
+   * The board is `preserve-3d`, so the browser sorts siblings by 3D position
+   * and a `z-index` on the leaf does not settle it: at -180deg the sheet is
+   * exactly coplanar with the left page, and coplanar surfaces resolve
+   * arbitrarily. The visible symptom is that the page never appears to land.
+   * You see the old left page right up until the state updates, and then it
+   * simply swaps.
+   *
+   * The offset has to be applied *after* each face's own rotation so it runs
+   * along that face's normal rather than the board's: `translateZ` on the
+   * front, and `rotateY(180deg) translateZ` on the back, so whichever face is
+   * pointing at the reader is always the one in front. Framer composes its
+   * shorthand props in a fixed order (translate before rotate), which is the
+   * wrong order here, so these are written as explicit transform strings.
+   */
+  const frontTransform = useTransform(sag, (d) => `translateZ(1.2px) skewY(${d}deg)`);
+  const backTransform = useTransform(
+    sag,
+    (d) => `rotateY(180deg) translateZ(1.2px) skewY(${d}deg)`
+  );
+
   // The shadow the raised sheet throws across the pages underneath.
   const castOpacity = useTransform(upright, [0, 1], [0, 0.5]);
   const castSkew = useTransform(rotation, [0, -180], [-20, 20]);
@@ -110,8 +134,8 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
       />
 
       <motion.div
-        className="backface-hidden absolute inset-0 origin-left overflow-hidden rounded-r-[3px]"
-        style={{ skewY: sag }}
+        className="backface-hidden absolute inset-0 overflow-hidden rounded-r-[3px]"
+        style={{ transform: frontTransform }}
       >
         {front}
         <motion.div
@@ -120,9 +144,16 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
         />
       </motion.div>
 
+      {/*
+        Centre origin on both faces, deliberately. `origin-right` here mirrored
+        the verso across its own right edge and parked it a full page-width to
+        the left of the sheet, so the face that is supposed to land on the left
+        page was never over it at all. A 180deg flip is only in place when it
+        pivots about the centre.
+      */}
       <motion.div
-        className="backface-hidden absolute inset-0 origin-right overflow-hidden rounded-l-[3px]"
-        style={{ rotateY: 180, skewY: sag }}
+        className="backface-hidden absolute inset-0 overflow-hidden rounded-l-[3px]"
+        style={{ transform: backTransform }}
       >
         {back}
         <motion.div
