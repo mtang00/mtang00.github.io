@@ -39,6 +39,18 @@ export interface Project {
   };
 }
 
+export interface WorkflowPractice {
+  title: string;
+  detail: string;
+  /** A short, checkable figure shown beside the title. */
+  evidence: string;
+}
+
+export interface ToolGroup {
+  name: string;
+  items: string[];
+}
+
 export interface ContactInfo {
   email: string;
   github: string;

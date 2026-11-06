@@ -39,3 +39,12 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
 }
+
+/* A nav that scrolls on narrow screens should not show a scrollbar doing it. */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

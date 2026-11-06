@@ -3,6 +3,7 @@ import { Hero } from './components/organisms/Hero';
 import { About } from './components/organisms/About';
 import { Projects } from './components/organisms/Projects';
 import { Skills } from './components/organisms/Skills';
+import { Workflow } from './components/organisms/Workflow';
 import { Education } from './components/organisms/Education';
 import { Contact } from './components/organisms/Contact';
 import { Footer } from './components/organisms/Footer';
@@ -16,6 +17,7 @@ function App() {
         <About />
         <Projects />
         <Skills />
+        <Workflow />
         <Education />
         <Contact />
       </main>
