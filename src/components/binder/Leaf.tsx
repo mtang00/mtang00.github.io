@@ -54,31 +54,43 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
    */
   const frontLight = useTransform(rotation, (r) => {
     const p = Math.min(1, Math.abs(r) / 180);
+    /*
+     * Everything is scaled by the bend, which is zero at both ends.
+     *
+     * A sheet lying flat on the stack is lit exactly like the page beneath
+     * it, so at 0deg and at -180deg this overlay has to vanish completely.
+     * It used to keep a constant 0.16 at the spine edge whatever the angle,
+     * so the moment the leaf unmounted and the flat page took over, the
+     * shadow at the gutter visibly changed size. The discontinuity was at the
+     * end of the turn, which is the one frame the eye is already watching.
+     */
+    const bend = Math.sin(Math.PI * p);
     const ridge = 18 + p * 62;
-    const lift = 0.3 * Math.sin(Math.PI * p);
-    const dark = 0.5 * Math.min(1, Math.abs(r) / 105);
+    const lift = 0.3 * bend;
+    const dark = 0.5 * bend;
     return (
       'linear-gradient(to right,' +
-      ` rgba(0,0,0,${(dark + 0.16).toFixed(3)}) 0%,` +
+      ` rgba(0,0,0,${(dark + 0.16 * bend).toFixed(3)}) 0%,` +
       ` rgba(0,0,0,${(dark * 0.5).toFixed(3)}) ${Math.max(0, ridge - 16).toFixed(1)}%,` +
       ` rgba(255,255,255,${lift.toFixed(3)}) ${ridge.toFixed(1)}%,` +
       ` rgba(0,0,0,${(dark * 0.8).toFixed(3)}) ${Math.min(99, ridge + 26).toFixed(1)}%,` +
-      ` rgba(0,0,0,${(dark + 0.1).toFixed(3)}) 100%)`
+      ` rgba(0,0,0,${(dark + 0.1 * bend).toFixed(3)}) 100%)`
     );
   });
 
   const backLight = useTransform(rotation, (r) => {
     const p = Math.min(1, Math.abs(r) / 180);
+    const bend = Math.sin(Math.PI * p);
     const ridge = 18 + (1 - p) * 62;
-    const lift = 0.24 * Math.sin(Math.PI * p);
-    const dark = 0.46 * Math.min(1, (180 - Math.abs(r)) / 105);
+    const lift = 0.24 * bend;
+    const dark = 0.46 * bend;
     return (
       'linear-gradient(to left,' +
-      ` rgba(0,0,0,${(dark + 0.14).toFixed(3)}) 0%,` +
+      ` rgba(0,0,0,${(dark + 0.14 * bend).toFixed(3)}) 0%,` +
       ` rgba(0,0,0,${(dark * 0.5).toFixed(3)}) ${Math.max(0, ridge - 16).toFixed(1)}%,` +
       ` rgba(255,255,255,${lift.toFixed(3)}) ${ridge.toFixed(1)}%,` +
       ` rgba(0,0,0,${(dark * 0.8).toFixed(3)}) ${Math.min(99, ridge + 26).toFixed(1)}%,` +
-      ` rgba(0,0,0,${(dark + 0.08).toFixed(3)}) 100%)`
+      ` rgba(0,0,0,${(dark + 0.08 * bend).toFixed(3)}) 100%)`
     );
   });
 
@@ -138,6 +150,15 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
         style={{ transform: frontTransform }}
       >
         {front}
+        {/*
+          The same gutter the flat page under it carries. Without this the
+          sheet arrives with no shadow at the spine and one appears the
+          instant it unmounts. This face is not mirrored, so it wants its
+          shadow on the left, where its spine is; the verso below is mirrored
+          by its own 180deg flip and needs the opposite class to land its
+          shadow on the same edge.
+        */}
+        <div className="gutter-right pointer-events-none absolute inset-0" />
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{ background: frontLight }}
@@ -156,6 +177,15 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
         style={{ transform: backTransform }}
       >
         {back}
+        {/*
+          `gutter-left` here, `gutter-right` on the recto above.
+          Reasoning about which way a 180deg flip mirrors a gradient got this
+          backwards; measuring settled it. Sampling the gutter column before
+          and after the leaf hands over to the flat page showed the eight
+          pixels left of the spine were *brighter* during the turn, meaning
+          the shadow had gone to the outer edge instead.
+        */}
+        <div className="gutter-left pointer-events-none absolute inset-0" />
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{ background: backLight }}
