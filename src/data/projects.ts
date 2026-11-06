@@ -188,17 +188,17 @@ export const projects: Project[] = [
       {
         url: "/assets/fitness-tracker/fnc_pc_home.png",
         description: "Dashboard - Progress Tracking & Workout Streaks",
-        businessImpact: "See your fitness journey at a glance — track how many exercises you've improved, your overall improvement percentage, and how long you've been training. Stay motivated with workout streak banners, weekly summaries of workouts completed, weight lifted, and time spent. Recent workout cards let you review past sessions instantly, and a single button gets you into your next workout."
+        businessImpact: "See your fitness journey at a glance: track how many exercises you've improved, your overall improvement percentage, and how long you've been training. Stay motivated with workout streak banners, weekly summaries of workouts completed, weight lifted, and time spent. Recent workout cards let you review past sessions instantly, and a single button gets you into your next workout."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_exercises.png",
         description: "Exercise Library - Browse & Discover Exercises",
-        businessImpact: "Explore a library of 386 exercises with demonstration images showing proper form, tagged by muscle group, equipment type, and difficulty. Your personal stats appear on each exercise — max weight, when you last performed it, and how many workouts include it — so you can easily find exercises you haven't done recently or discover new ones to try."
+        businessImpact: "Explore a library of 386 exercises with demonstration images showing proper form, tagged by muscle group, equipment type, and difficulty. Your personal stats appear on each exercise (max weight, when you last performed it, and how many workouts include it), so you can easily find exercises you haven't done recently or discover new ones to try."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_leaderboard.png",
         description: "Leaderboard - Compete with Friends",
-        businessImpact: "Compete with friends across daily, weekly, monthly, and all-time rankings. The scoring system rewards consistency and personal improvement, not just raw strength — so beginners and advanced lifters can compete fairly. See everyone's workout count, score breakdown, and PR bonuses, and tap into their workouts or profiles to stay connected."
+        businessImpact: "Compete with friends across daily, weekly, monthly, and all-time rankings. The scoring system rewards consistency and personal improvement, not just raw strength, so beginners and advanced lifters can compete fairly. See everyone's workout count, score breakdown, and PR bonuses, and tap into their workouts or profiles to stay connected."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_social.png",
@@ -208,7 +208,7 @@ export const projects: Project[] = [
       {
         url: "/assets/fitness-tracker/fnc_pc_trends1.png",
         description: "Exercise Trends - Track Your Lifts Over Time",
-        businessImpact: "Dive into your performance history for any exercise — see your recent sessions with sets, weights, estimated 1RM, and total volume side by side. Filter by time period to zoom in on recent progress or zoom out for the big picture. A trend indicator instantly tells you if you're improving, stable, or declining so you know when to push harder or deload."
+        businessImpact: "Dive into your performance history for any exercise: see your recent sessions with sets, weights, estimated 1RM, and total volume side by side. Filter by time period to zoom in on recent progress or zoom out for the big picture. A trend indicator instantly tells you if you're improving, stable, or declining so you know when to push harder or deload."
       },
       {
         url: "/assets/fitness-tracker/fnc_pc_trends2.png",
@@ -218,7 +218,7 @@ export const projects: Project[] = [
       {
         url: "/assets/fitness-tracker/fnc_mobile_home.png",
         description: "Mobile Dashboard - Your Gym Companion",
-        businessImpact: "Take your full dashboard to the gym as an installable Progressive Web App. The mobile layout puts everything within thumb's reach — progress stats, streak notifications, and quick navigation to workouts, leaderboard, social, and exercises through the bottom nav bar."
+        businessImpact: "Take your full dashboard to the gym as an installable Progressive Web App. The mobile layout puts everything within thumb's reach: progress stats, streak notifications, and quick navigation to workouts, leaderboard, social, and exercises through the bottom nav bar."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_exercise.png",
@@ -233,17 +233,17 @@ export const projects: Project[] = [
       {
         url: "/assets/fitness-tracker/fnc_mobile_calendar.png",
         description: "Workout Calendar - See Your Consistency",
-        businessImpact: "A simple monthly calendar view marks every day you trained. Instantly spot your patterns — rest days, training frequency, and streaks. Seeing a month full of completed workouts is one of the best motivators to keep showing up."
+        businessImpact: "A simple monthly calendar view marks every day you trained. Instantly spot your patterns: rest days, training frequency, and streaks. Seeing a month full of completed workouts is one of the best motivators to keep showing up."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_friends.png",
         description: "Friend Activity - See What Your Friends Are Training",
-        businessImpact: "Keep up with your friends' workouts in a social feed — see what muscle groups they hit, how many sets they did, and how heavy they went. Tap into any workout for the full breakdown. Knowing your friends are training creates accountability that keeps everyone coming back."
+        businessImpact: "Keep up with your friends' workouts in a social feed: see what muscle groups they hit, how many sets they did, and how heavy they went. Tap into any workout for the full breakdown. Knowing your friends are training creates accountability that keeps everyone coming back."
       },
       {
         url: "/assets/fitness-tracker/fnc_mobile_template.png",
         description: "Workout Templates - Start Training in Seconds",
-        businessImpact: "Save your favorite routines as templates and start a workout with a single tap. Share templates with friends via share codes so your whole group can follow the same program. No more re-entering the same exercises every session — just pick a template and go."
+        businessImpact: "Save your favorite routines as templates and start a workout with a single tap. Share templates with friends via share codes so your whole group can follow the same program. No more re-entering the same exercises every session. Just pick a template and go."
       }
     ],
 
@@ -262,7 +262,7 @@ export const projects: Project[] = [
       files: "76 (25 JS modules, 37 PHP API endpoints, 14 CSS files)",
       apiEndpoints: "37 PHP endpoints covering auth, workouts, exercises, goals, friends, messages, groups, challenges, leaderboard, trends, templates, notifications, reactions, weight, achievements, and plateau detection",
       databaseTables: "33 tables covering workouts, exercises, sets, users, goals, friendships, messages, groups, challenges, templates, weight tracking, notifications, reactions, achievements, scoring, session persistence, and more",
-      moduleSystem: "ES6 modules with dependency injection — PointsCalculator, WorkoutManager, SocialManager, TrendsManager, TemplatesManager, GoalsManager, GroupsManager, ChallengesManager, WeightManager, SpectateManager, NotificationsManager, ReactionsManager, and others",
+      moduleSystem: "ES6 modules with dependency injection: PointsCalculator, WorkoutManager, SocialManager, TrendsManager, TemplatesManager, GoalsManager, GroupsManager, ChallengesManager, WeightManager, SpectateManager, NotificationsManager, ReactionsManager, and others",
       testingApproach: "Manual testing with Docker for local development, deployed via SFTP with cache-busting"
     }
   },
