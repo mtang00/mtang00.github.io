@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion } from 'framer-motion';
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform
+} from 'framer-motion';
 import { Leaf } from './Leaf';
-import { leaves } from '../../data/pages';
+import { leaves, spreadTitles } from '../../data/pages';
 import { SinglePage } from './SinglePage';
 
 /** How far a drag must travel across the page before it commits to a turn. */
@@ -10,6 +18,10 @@ const COMMIT_RATIO = 0.22;
 const WHEEL_COOLDOWN_MS = 620;
 /** Pointer travel under this is a click on the page, not a drag of it. */
 const CLICK_SLOP = 6;
+/** How many sheet edges the fore-edge counts before it stops growing. */
+const EDGE_MAX = 7;
+/** How wide one sheet reads in the stack. Two of these is one hairline pair. */
+const EDGE_PX = 1.1;
 
 interface Flip {
   leaf: number;
@@ -76,6 +88,79 @@ export const Binder = () => {
   const lastWheel = useRef(0);
   const drag = useRef<{ x: number; dir: 1 | -1; width: number } | null>(null);
 
+  /* --- The scene ---------------------------------------------------------- */
+
+  /**
+   * The binder arriving. 0 is in the air and unlit, 1 is resting on the desk.
+   *
+   * Set straight to 1 under reduced motion so the first paint is the finished
+   * scene rather than an entrance that never runs, which would leave the board
+   * parked at its starting transform.
+   */
+  const intro = useMotionValue(reduce ? 1 : 0);
+  /** A few pixels of give when a sheet lands. Paper has weight. */
+  const settle = useMotionValue(0);
+
+  /*
+   * Viewpoint parallax, not a moving light.
+   *
+   * The pointer stands in for the reader's head: lean right and you see a
+   * little more of the binder's left side, while the lamp pool, being further
+   * away than the object, shifts the other way and by less. A lamp that
+   * followed the cursor would be a light on a stick. This is the whole reason
+   * the pool was split out of the room's background into its own layer.
+   *
+   * Both rotations stay under three degrees. The screw posts are positioned
+   * from a measured box that a transform does not update, and the board's
+   * centre is the one point a rotation about its own centre leaves fixed, so
+   * the posts hold at the spine as long as the angles stay small.
+   */
+  const px = useSpring(0, { stiffness: 46, damping: 18, mass: 0.7 });
+  const py = useSpring(0, { stiffness: 46, damping: 18, mass: 0.7 });
+
+  const boardTransform = useTransform(
+    [intro, settle, px, py],
+    ([i, s, x, y]: number[]) =>
+      `translate3d(0, ${((1 - i) * 54 + s).toFixed(2)}px, 0)` +
+      ` scale(${(0.93 + i * 0.07).toFixed(4)})` +
+      ` rotateX(${(7 + (1 - i) * 11 - y * 2.2).toFixed(2)}deg)` +
+      ` rotateY(${(x * 2.6).toFixed(2)}deg)`
+  );
+  const boardOpacity = useTransform(intro, [0, 0.3, 1], [0, 0.85, 1]);
+  const lampTransform = useTransform(
+    [px, py],
+    ([x, y]: number[]) => `translate3d(${(-x * 30).toFixed(1)}px, ${(-y * 22).toFixed(1)}px, 0)`
+  );
+  const lampOpacity = useTransform(intro, [0, 1], [0.35, 1]);
+
+  useEffect(() => {
+    if (reduce) return;
+    const run = animate(intro, 1, { duration: 1.15, delay: 0.12, ease: [0.16, 1, 0.3, 1] });
+    return () => run.stop();
+  }, [intro, reduce]);
+
+  useEffect(() => {
+    if (reduce) return;
+    const onMove = (e: PointerEvent) => {
+      px.set((e.clientX / window.innerWidth - 0.5) * 2);
+      py.set((e.clientY / window.innerHeight - 0.5) * 2);
+    };
+    // Back to square on the way out, so a binder nobody is looking at sits
+    // straight rather than frozen at whatever angle the cursor left it.
+    const centre = () => {
+      px.set(0);
+      py.set(0);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerleave', centre);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerleave', centre);
+    };
+  }, [px, py, reduce]);
+
+  /* --- Turning ------------------------------------------------------------ */
+
   const atStart = turned === 0;
   const atEnd = turned >= leaves.length;
   const busy = flip !== null && drag.current === null;
@@ -103,6 +188,25 @@ export const Binder = () => {
       const land = () => {
         setTurned((t) => t + dir);
         setFlip(null);
+        /*
+         * The thunk.
+         *
+         * A sheet dropping onto the stack presses the whole block down a hair
+         * and it comes back. Three pixels, and it is the difference between a
+         * page that arrives and one that is simply there.
+         *
+         * It rides on the board rather than on the sheet, deliberately: by
+         * the time this fires the sheet has already handed over to the flat
+         * page, and anything attached to the sheet would be a jump at the one
+         * frame the eye is already watching.
+         */
+        if (!reduce) {
+          animate(settle, [0, 3.2, 0], {
+            duration: 0.46,
+            times: [0, 0.26, 1],
+            ease: [0.16, 1, 0.3, 1]
+          });
+        }
       };
 
       if (reduce) {
@@ -120,7 +224,7 @@ export const Binder = () => {
         onComplete: land
       });
     },
-    [atEnd, atStart, flip, reduce, rotation, turned]
+    [atEnd, atStart, flip, reduce, rotation, settle, turned]
   );
 
   /** Snap the sheet home when a drag did not travel far enough to commit. */
@@ -239,7 +343,18 @@ export const Binder = () => {
   const rightIndex = flip?.dir === 1 ? turned + 1 : turned;
   const progress = leaves.length ? turned / leaves.length : 0;
 
-  const board = <div className="h-full w-full" style={{ background: 'var(--cover)' }} />;
+  /*
+   * How much paper is stacked on each side, in pixels of fore-edge.
+   *
+   * Capped at the board's own margin: the stack lives in the 11px the cover
+   * board stands out past the paper, and a wider one would hang off the object
+   * rather than sit inside it.
+   */
+  const edgeLeft = Math.min(turned, EDGE_MAX) * EDGE_PX;
+  const edgeRight = Math.min(leaves.length - turned, EDGE_MAX) * EDGE_PX;
+
+  // Where a leaf has no page: the inside of a cover, which is board.
+  const board = <div className="leather h-full w-full" />;
 
   // After every hook, never before: an early return above them would change
   // the hook order on the first resize across the breakpoint.
@@ -247,10 +362,12 @@ export const Binder = () => {
 
   return (
     <div className="room-light room-grain room-vignette relative min-h-screen w-full overflow-hidden">
+      <motion.div className="lamp" style={{ transform: lampTransform, opacity: lampOpacity }} />
+      <div className="motes" />
 
       <div
         ref={stage}
-        className="relative mx-auto flex min-h-screen max-w-[1700px] select-none items-center justify-center px-3 pb-20 pt-6 sm:px-5"
+        className="relative mx-auto flex min-h-screen max-w-[1700px] select-none items-center justify-center px-3 pb-24 pt-6 sm:px-5"
         style={{ perspective: '5200px', touchAction: 'pan-y', cursor: flip ? 'grabbing' : 'pointer' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -263,15 +380,33 @@ export const Binder = () => {
           alone derives height from width and happily grows the board under
           the chrome, which is what it did on the first pass.
         */}
-        <div
+        <motion.div
           ref={boardRef}
           className="preserve-3d relative"
           style={{
-            transform: 'rotateX(7deg)',
-            width: 'min(1500px, 93vw, calc((100vh - 8.5rem) * 1.5))',
+            transform: boardTransform,
+            opacity: boardOpacity,
+            width: 'min(1500px, 93vw, calc((100vh - 10.5rem) * 1.5))',
             aspectRatio: '3 / 2'
           }}
         >
+          {/*
+            The lit pages throwing light back into the room.
+            Two bright sheets under a lamp are the brightest surface in the
+            scene by a wide margin, and with nothing around them they looked
+            cut out of the dark rather than lying in it.
+          */}
+          <div
+            className="page-glow pointer-events-none absolute -inset-[16%]"
+            style={{ transform: 'translateZ(-60px)' }}
+          />
+
+          {/* The desk bouncing a little light back up under the binder. */}
+          <div
+            className="desk-bounce pointer-events-none absolute -inset-x-[10%] -bottom-[11%] h-[26%]"
+            style={{ transform: 'translateZ(-40px)' }}
+          />
+
           {/* Where the binder meets the desk. Behind the board, hence -z. */}
           <div
             className="contact-shadow pointer-events-none absolute -inset-x-[6%] -bottom-[7%] h-[22%]"
@@ -280,12 +415,55 @@ export const Binder = () => {
 
           {/* The cover board, a hard black margin around the paper. */}
           <div
-            className="absolute -inset-[11px] rounded-[7px]"
+            className="leather absolute -inset-[11px] overflow-hidden rounded-[7px]"
             style={{
-              background: 'var(--cover)',
               boxShadow:
-                '0 64px 130px -34px rgba(0,0,0,0.9), 0 0 0 1px var(--cover-edge), inset 0 1px 0 rgba(255,255,255,0.05)'
+                '0 64px 130px -34px rgba(0,0,0,0.9), 0 0 0 1px var(--cover-edge), inset 0 1px 0 rgba(255,255,255,0.06)'
             }}
+          />
+
+          {/*
+            The fore-edges: the cut edges of the sheets still stacked on each
+            side, sitting in the board's margin. They are the one cue that
+            says how far through the binder you are without reading a counter,
+            and they are why the object looks like it holds paper: the stack
+            visibly thins on the right and thickens on the left as you read.
+
+            Width, not `scaleX`, and this is the one place a layout property is
+            the right thing to animate: the hairlines are the sheets, so a
+            scaled stack compresses them into a solid strip and stops counting
+            anything. These are childless absolute boxes in the board's margin,
+            so the layout they run costs nothing.
+
+            Anchored with `right: 100%` and `left: 100%`, which put each one's
+            inner edge exactly on the page's outer edge and let the width grow
+            away from the paper.
+          */}
+          <motion.div
+            className="fore-edge pointer-events-none absolute"
+            style={{
+              top: '1.2%',
+              bottom: '1.2%',
+              right: '100%',
+              borderRadius: '2px 0 0 2px',
+              boxShadow: 'inset 2px 0 3px -1px rgba(0,0,0,0.55)'
+            }}
+            animate={{ width: edgeLeft, opacity: edgeLeft > 0 ? 0.88 : 0 }}
+            initial={false}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          />
+          <motion.div
+            className="fore-edge pointer-events-none absolute"
+            style={{
+              top: '1.2%',
+              bottom: '1.2%',
+              left: '100%',
+              borderRadius: '0 2px 2px 0',
+              boxShadow: 'inset -2px 0 3px -1px rgba(0,0,0,0.55)'
+            }}
+            animate={{ width: edgeRight, opacity: edgeRight > 0 ? 0.88 : 0 }}
+            initial={false}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
 
           {/* Left page, lying flat. */}
@@ -310,7 +488,7 @@ export const Binder = () => {
           )}
 
           {/* Screw posts, above the paper because the binding is on top of it. */}
-        </div>
+        </motion.div>
       </div>
 
       {spine && (
@@ -325,7 +503,7 @@ export const Binder = () => {
           }}
         >
           {[0, 1, 2].map((i) => (
-            <span
+            <motion.span
               key={i}
               className="block h-3 w-3 rounded-full"
               style={{
@@ -333,66 +511,137 @@ export const Binder = () => {
                   'radial-gradient(circle at 35% 30%, var(--post), oklch(0.33 0.01 265))',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.35)'
               }}
+              initial={reduce ? false : { scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.6 + i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             />
           ))}
         </div>
       )}
 
-      <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 flex items-center justify-center gap-5 pb-6"
+      {/* The chrome arrives last, once the binder is already down on the desk. */}
+      <motion.div
+        className="pointer-events-none fixed inset-x-0 bottom-0 flex flex-col items-center gap-2 pb-6"
         style={{ zIndex: 60 }}
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        <button
-          onClick={() => turn(-1)}
-          disabled={atStart}
-          aria-label="Previous page"
-          className="pointer-events-auto rounded-full border border-white/15 p-2.5 text-white/70 transition hover:border-white/40 hover:text-white disabled:opacity-25"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
+        {/*
+          What you are looking at, above where you are in the stack. One line
+          at a fixed height, so a longer project title cannot shift the
+          controls underneath it as the spread changes.
 
-        <div className="flex items-center gap-3">
-          <span className="plate-label" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            {String(Math.min(turned + 1, leaves.length)).padStart(2, '0')}
-            {' / '}
-            {String(leaves.length).padStart(2, '0')}
-          </span>
-          <span className="block h-px w-24 overflow-hidden bg-white/15 sm:w-40">
-            <motion.span
-              className="block h-full"
-              style={{ background: 'var(--accent)', transformOrigin: 'left' }}
-              animate={{ scaleX: progress }}
-              initial={false}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </span>
+          Until the first turn this slot carries the hint instead. The hint
+          used to have its own line just under the board, where it sat on the
+          cover's bottom edge, and on the cover the title it was competing
+          with reads "Front cover" next to a cover nobody can miss.
+
+          Crossfaded in place rather than with `mode="wait"`: both lines are
+          absolutely positioned and overlap exactly, so they can share the
+          slot, and the queued version deadlocked. The outgoing line finished
+          its exit and was never removed, which held the incoming one back
+          forever and left the slot blank from the second spread on.
+        */}
+        <div className="relative h-4 w-[23rem] overflow-hidden">
+          <AnimatePresence initial={false}>
+            <motion.p
+              key={hint ? 'hint' : turned}
+              className="plate-label absolute inset-0 truncate text-center"
+              style={{ color: hint ? 'rgba(255,255,255,0.54)' : 'rgba(255,255,255,0.68)' }}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 7 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{
+                opacity: 0,
+                y: reduce ? 0 : -7,
+                // Its own timing. An exiting child keeps the props it was
+                // rendered with, so the hint would otherwise take its 1.4s
+                // entrance delay with it on the way out.
+                transition: { duration: 0.3, delay: 0 }
+              }}
+              transition={{
+                duration: 0.3,
+                delay: hint ? 1.4 : 0,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+            >
+              {hint ? 'Drag the page, or use the arrow keys' : (spreadTitles[turned] ?? '')}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
-        <button
-          onClick={() => turn(1)}
-          disabled={atEnd}
-          aria-label="Next page"
-          className="pointer-events-auto rounded-full border border-white/15 p-2.5 text-white/70 transition hover:border-white/40 hover:text-white disabled:opacity-25"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-      </div>
+        <div className="flex items-center justify-center gap-5">
+          <button
+            onClick={() => turn(-1)}
+            disabled={atStart}
+            aria-label="Previous page"
+            className="chrome-btn group pointer-events-auto rounded-full p-2.5"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              className="transition-transform duration-300 group-hover:-translate-x-0.5"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
 
-      {hint && !reduce && (
-        <motion.p
-          className="plate-label pointer-events-none fixed inset-x-0 bottom-[4.5rem] text-center"
-          style={{ color: 'rgba(255,255,255,0.4)', zIndex: 60 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 0.8 }}
-        >
-          Drag the page, or use the arrow keys
-        </motion.p>
-      )}
+          <div className="flex items-center gap-3">
+            <span className="plate-label tabular-nums" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              {String(Math.min(turned + 1, leaves.length)).padStart(2, '0')}
+              {' / '}
+              {String(leaves.length).padStart(2, '0')}
+            </span>
+            <span className="relative block h-px w-24 sm:w-40">
+              <span className="absolute inset-0 bg-white/15" />
+              <motion.span
+                className="absolute inset-0 origin-left"
+                style={{ background: 'var(--accent)' }}
+                animate={{ scaleX: progress }}
+                initial={false}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              />
+              {/* The head of the bar carries the only glow in the chrome. */}
+              <motion.span
+                className="absolute block h-1.5 w-1.5 rounded-full"
+                style={{
+                  top: 'calc(50% - 3px)',
+                  background: 'var(--accent)',
+                  boxShadow: '0 0 10px 2px oklch(0.55 0.21 258 / 0.75)',
+                  marginLeft: -3
+                }}
+                animate={{ left: `${progress * 100}%`, opacity: progress > 0 ? 1 : 0 }}
+                initial={false}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </span>
+          </div>
+
+          <button
+            onClick={() => turn(1)}
+            disabled={atEnd}
+            aria-label="Next page"
+            className="chrome-btn group pointer-events-auto rounded-full p-2.5"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </motion.div>
+
     </div>
   );
 };

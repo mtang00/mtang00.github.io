@@ -77,19 +77,135 @@
   .room-light {
     isolation: isolate;
     background:
-      /* The lamp, pooling on and around the binder. */
-      radial-gradient(ellipse 88% 58% at 50% 32%, oklch(0.265 0.024 265) 0%, transparent 64%),
       /* The desk, a touch lighter than the wall and meeting it at a soft
          horizon. Without a plane under it the binder floats in a void. */
       linear-gradient(
         to bottom,
-        transparent 52%,
-        oklch(0.185 0.015 262) 74%,
-        oklch(0.158 0.012 258) 100%
+        transparent 50%,
+        oklch(0.195 0.016 262) 73%,
+        oklch(0.15 0.012 258) 100%
       ),
-      /* The room itself, falling away at the corners. */
-      radial-gradient(ellipse 150% 110% at 50% 4%, oklch(0.178 0.017 266), oklch(0.112 0.012 268) 72%),
+      /* The wall, falling away at the corners. */
+      radial-gradient(ellipse 150% 112% at 50% 2%, oklch(0.182 0.018 266), oklch(0.104 0.012 268) 70%),
       var(--room);
+  }
+
+  /*
+   * The lamp, as its own layer rather than a stop in the room's background.
+   *
+   * It is split out so it can move: a desk lamp is a fixed source and the
+   * pool it throws is the one thing in the scene that should answer the
+   * pointer, which is what makes the room read as a space the binder is
+   * sitting in rather than a backdrop printed behind it. Two ellipses, a
+   * tight hot core inside a wide falloff, because a single gradient reads as
+   * a vignette and not as a light.
+   */
+  .lamp {
+    position: absolute;
+    /*
+     * The bleed and the gradient centres are a pair.
+     *
+     * A percentage stop is resolved against this element's own box, not the
+     * window, so bleeding it out by 30% moved the pool to within a few per
+     * cent of the top of the screen and left the binder sitting in the dark.
+     * The bleed only has to cover the 30px of parallax travel, and the
+     * vertical centres are then offset to put the pool back at 34% of the
+     * viewport: (34 + 8) / 116.
+     */
+    inset: -8%;
+    /*
+     * Below the grain, which is at -1.
+     *
+     * The grain exists to dither this gradient's banding on an 8-bit display,
+     * and a layer painted above it is not dithered by it. Negative z-index
+     * children still paint above the room's own background, so -2 keeps the
+     * lamp in the room and under the noise.
+     */
+    z-index: -2;
+    pointer-events: none;
+    will-change: transform;
+    animation: lamp-breathe 13s ease-in-out infinite;
+    background:
+      radial-gradient(ellipse 32% 24% at 50% 36%, oklch(0.46 0.034 261 / 0.45), transparent 68%),
+      radial-gradient(ellipse 76% 54% at 50% 37%, oklch(0.31 0.027 265 / 0.85), transparent 72%);
+  }
+
+  /* A filament never holds perfectly steady. Barely perceptible, deliberately. */
+  @keyframes lamp-breathe {
+    0%,
+    100% {
+      opacity: 0.93;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /*
+   * Dust in the lamp beam.
+   *
+   * Specks placed by hand in two layers running at different speeds, so the
+   * field has parallax rather than sliding as one sheet. Both fade in and out
+   * inside their own cycle, which is what hides the loop: a `linear infinite`
+   * translate alone snaps back visibly at the seam.
+   */
+  .motes {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .motes::before,
+  .motes::after {
+    content: '';
+    position: absolute;
+    inset: -14% 0;
+    background-repeat: no-repeat;
+    will-change: transform, opacity;
+  }
+
+  .motes::before {
+    background-image:
+      radial-gradient(1.7px 1.7px at 12% 22%, rgba(255, 255, 255, 0.55), transparent 64%),
+      radial-gradient(1.2px 1.2px at 27% 61%, rgba(255, 255, 255, 0.4), transparent 64%),
+      radial-gradient(2.1px 2.1px at 40% 33%, rgba(255, 255, 255, 0.28), transparent 64%),
+      radial-gradient(1.3px 1.3px at 57% 73%, rgba(255, 255, 255, 0.45), transparent 64%),
+      radial-gradient(1.8px 1.8px at 68% 19%, rgba(255, 255, 255, 0.33), transparent 64%),
+      radial-gradient(1.1px 1.1px at 82% 54%, rgba(255, 255, 255, 0.5), transparent 64%),
+      radial-gradient(1.5px 1.5px at 93% 37%, rgba(255, 255, 255, 0.3), transparent 64%);
+    animation: motes-rise 34s linear infinite;
+  }
+
+  .motes::after {
+    background-image:
+      radial-gradient(1.1px 1.1px at 7% 48%, rgba(255, 255, 255, 0.4), transparent 64%),
+      radial-gradient(1.6px 1.6px at 21% 14%, rgba(255, 255, 255, 0.3), transparent 64%),
+      radial-gradient(1.2px 1.2px at 34% 80%, rgba(255, 255, 255, 0.45), transparent 64%),
+      radial-gradient(1.9px 1.9px at 49% 44%, rgba(255, 255, 255, 0.24), transparent 64%),
+      radial-gradient(1.3px 1.3px at 63% 29%, rgba(255, 255, 255, 0.4), transparent 64%),
+      radial-gradient(1.5px 1.5px at 76% 68%, rgba(255, 255, 255, 0.28), transparent 64%),
+      radial-gradient(1.2px 1.2px at 89% 12%, rgba(255, 255, 255, 0.42), transparent 64%);
+    animation: motes-rise 53s linear infinite;
+    animation-delay: -21s;
+  }
+
+  @keyframes motes-rise {
+    0% {
+      transform: translate3d(0, 9%, 0);
+      opacity: 0;
+    }
+    16% {
+      opacity: 1;
+    }
+    84% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(1.6%, -9%, 0);
+      opacity: 0;
+    }
   }
 
   /*
@@ -141,6 +257,148 @@
   }
 
   /*
+   * The desk returning a little of the lamp back up at the binder.
+   *
+   * A matt desk does not mirror, but it does bounce, and the faint bloom
+   * around the base is what stops the contact shadow from reading as a hole
+   * cut in the floor.
+   */
+  /*
+   * The halo the open pages throw into the room.
+   *
+   * Paper under a lamp is by far the brightest surface in this scene, and a
+   * bright rectangle with nothing around it reads as cut out of the dark
+   * rather than lying in it. This is that spill, and it is why the binder
+   * looks lit rather than pasted on.
+   */
+  .page-glow {
+    background: radial-gradient(
+      ellipse 44% 40% at 50% 46%,
+      oklch(0.56 0.012 265 / 0.3),
+      transparent 68%
+    );
+  }
+
+  .desk-bounce {
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, oklch(0.36 0.022 262 / 0.5), transparent 72%);
+    filter: blur(34px);
+  }
+
+  /*
+   * The cover board: leatherette, not flat charcoal.
+   *
+   * Grain is a noise tile blended over the base rather than an image, so it
+   * costs no request and scales with the board. The pebbling is what makes a
+   * dark rectangle read as a material; without it the cover is the one
+   * surface in the scene with no texture at all, and it looks like a hole.
+   */
+  .leather {
+    position: relative;
+    background-color: var(--cover);
+  }
+
+  .leather::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23l)'/%3E%3C/svg%3E");
+  }
+
+  /* Blind-stamped type: pressed into the board, so lit from above and dark below. */
+  .emboss {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.8),
+      0 -1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  /*
+   * One pass of the lamp across the cover as it arrives, and never again.
+   *
+   * `both` matters: without it the sweep snaps back to its start position and
+   * sits there as a visible band on a cover nobody is moving.
+   *
+   * The end stop is in the band's own widths, not the cover's. The band is
+   * 26% of the cover wide, so 240% of itself only carried it to 62% across
+   * and it parked in the middle of the board; it has to clear 100/26, call it
+   * 430%, before `both` holds it somewhere out of sight.
+   */
+  @keyframes cover-sweep {
+    from {
+      transform: translateX(-140%) skewX(-14deg);
+    }
+    to {
+      transform: translateX(430%) skewX(-14deg);
+    }
+  }
+
+  .cover-sweep {
+    animation: cover-sweep 2.4s 0.75s cubic-bezier(0.33, 0.05, 0.2, 1) 1 both;
+  }
+
+  /*
+   * The fore-edge: the cut edges of the sheets still stacked on each side.
+   *
+   * This is the one cue that says how far through the binder you are without
+   * reading the counter, and it is why the object looks like it holds paper.
+   * Hairlines, because a block of paper seen edge-on is lines rather than a
+   * solid, and darkened toward the spine where the stack falls into shadow.
+   */
+  /*
+   * Nowhere near as bright as the page it belongs to.
+   *
+   * The first pass used paper lightness, and a 9px strip at L 0.93 against a
+   * room at L 0.14 stopped reading as a stack of sheets and became a lit bar
+   * down the side of the binder, the brightest thing on the screen after the
+   * open page. A cut edge in a dark room catches a fraction of the lamp and
+   * shades itself, so it sits a long way below the page: around L 0.55 at the
+   * highlights, with the hairlines half of that.
+   */
+  .fore-edge {
+    background-image: repeating-linear-gradient(
+      to right,
+      oklch(0.56 0.004 265) 0 1px,
+      oklch(0.33 0.005 265) 1px 2px
+    );
+  }
+
+  /* The chrome at the foot: glass, so it belongs to the room and not the page. */
+  .chrome-btn {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(6px);
+    color: rgba(255, 255, 255, 0.72);
+    transition:
+      border-color 0.3s var(--ease-page),
+      color 0.3s var(--ease-page),
+      background-color 0.3s var(--ease-page),
+      box-shadow 0.3s var(--ease-page),
+      transform 0.3s var(--ease-page);
+  }
+
+  .chrome-btn:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    box-shadow: 0 0 22px -6px oklch(0.55 0.21 258 / 0.6);
+  }
+
+  .chrome-btn:active:not(:disabled) {
+    transform: scale(0.92);
+  }
+
+  .chrome-btn:disabled {
+    opacity: 0.22;
+  }
+
+  .chrome-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /*
    * Paper. The gradient is the lamp falling across the sheet, brighter at the
    * top where the light is, and the inset edge is the cut edge of the stock.
    */
@@ -154,6 +412,22 @@
    * and overflowed the other. Container units track the thing the text is
    * actually set on.
    */
+  /*
+   * Container-relative type without the paper.
+   *
+   * The covers are board rather than paper, so they want none of `.sheet`'s
+   * background, but they do want their type to scale with the page: the
+   * binder's name was the one heading still sized in `vw`, which meant it was
+   * tuned for the spread and oversized on a phone.
+   *
+   * Safe on a face of the turning leaf, unsafe on the leaf itself: this
+   * property creates a stacking context, and putting one on the leaf root
+   * flattened the 3D and stopped the sheet painting past the spine.
+   */
+  .sheet-container {
+    container-type: inline-size;
+  }
+
   .sheet {
     container-type: inline-size;
     background:
@@ -280,5 +554,22 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /*
+   * The looping atmosphere is removed rather than frozen.
+   *
+   * The rule above lands every animation on its last keyframe, which happens
+   * to be the right answer for the lamp and the sweep but not for the dust:
+   * a frozen speck field is a grid of stray dots on the wall. These two come
+   * off the page entirely.
+   */
+  .motes {
+    display: none;
+  }
+
+  .lamp {
+    animation: none;
+    opacity: 1;
   }
 }

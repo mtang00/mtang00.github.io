@@ -50,43 +50,96 @@ const Sheet = ({
   </div>
 );
 
-/** The outside of the binder: board, not paper. */
+/**
+ * The outside of the binder: board, not paper.
+ *
+ * Everything here is pressed or stamped rather than printed, because that is
+ * what a cover is: the title is blind-stamped into the leatherette and the
+ * rule under it is the one foil element. The lamp crosses it once on arrival
+ * and then leaves it alone.
+ */
 const Cover = () => (
-  <div
-    className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden"
-    style={{ background: 'var(--cover)' }}
-  >
+  <div className="leather sheet-container relative flex h-full w-full flex-col items-center justify-center overflow-hidden">
+    {/* The lamp pooling on the board. */}
     <div
-      className="absolute inset-0 opacity-[0.5]"
+      className="pointer-events-none absolute inset-0"
       style={{
         background:
-          'radial-gradient(ellipse 80% 60% at 50% 28%, oklch(0.3 0.016 265), transparent 70%)'
+          'radial-gradient(ellipse 78% 58% at 50% 26%, oklch(0.32 0.018 265 / 0.9), transparent 70%)'
       }}
     />
-    <div className="relative text-center">
-      <p className="plate-label mb-6" style={{ color: 'rgba(255,255,255,0.4)' }}>
+    {/* The board turning down into the spine. */}
+    <div
+      className="pointer-events-none absolute inset-y-0 left-0 w-[7%]"
+      style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.5), transparent)' }}
+    />
+    {/* A blind-stamped border, inset from the edge the way a real one is. */}
+    <div
+      className="pointer-events-none absolute inset-[5.5%] rounded-[2px]"
+      style={{
+        boxShadow:
+          'inset 0 0 0 1px rgba(0,0,0,0.45), inset 0 0 0 2px rgba(255,255,255,0.045)'
+      }}
+    />
+
+    <div className="relative px-[10%] text-center">
+      <p
+        className="plate-label mb-[5cqw]"
+        style={{ color: 'rgba(255,255,255,0.42)', textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+      >
         Portfolio
       </p>
       <h1
-        className="display text-[clamp(2rem,5.2vw,4.6rem)]"
-        style={{ color: 'oklch(0.96 0.004 265)' }}
+        className="display emboss text-[clamp(1.8rem,11cqw,4.4rem)]"
+        style={{ color: 'oklch(0.9 0.004 265)' }}
       >
         {personalInfo.name}
       </h1>
-      <div className="mx-auto mt-7 h-px w-16" style={{ background: 'var(--accent)' }} />
-      <p className="p-body mt-[3.5cqw]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <div
+        className="mx-auto mt-[5cqw] h-px w-[22%]"
+        style={{
+          background: 'var(--accent)',
+          boxShadow: '0 0 12px 1px oklch(0.55 0.21 258 / 0.55)'
+        }}
+      />
+      <p
+        className="p-body mt-[4cqw]"
+        style={{ color: 'rgba(255,255,255,0.52)', textShadow: '0 1px 0 rgba(0,0,0,0.6)' }}
+      >
         {personalInfo.title}
       </p>
+    </div>
+
+    {/* The one pass of the lamp, on arrival. Narrow, low, and once. */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        className="cover-sweep absolute inset-y-[-20%] left-0 w-[26%]"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, rgba(255,255,255,0.055) 45%, rgba(255,255,255,0.085) 52%, transparent)'
+        }}
+      />
     </div>
   </div>
 );
 
 const Back = () => (
-  <div
-    className="relative flex h-full w-full items-end justify-center overflow-hidden"
-    style={{ background: 'var(--cover)' }}
-  >
-    <p className="plate-label pb-[8%]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+  <div className="leather sheet-container relative flex h-full w-full items-end justify-center overflow-hidden">
+    <div
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background:
+          'radial-gradient(ellipse 70% 55% at 50% 30%, oklch(0.29 0.016 265 / 0.75), transparent 72%)'
+      }}
+    />
+    <div
+      className="pointer-events-none absolute inset-[5.5%] rounded-[2px]"
+      style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.42)' }}
+    />
+    <p
+      className="plate-label relative pb-[8%]"
+      style={{ color: 'rgba(255,255,255,0.32)', textShadow: '0 1px 0 rgba(0,0,0,0.6)' }}
+    >
       End of portfolio
     </p>
   </div>
@@ -332,6 +385,24 @@ export const leaves: BinderLeaf[] = [
   { front: <WorkflowPage />, back: <SetupPage /> },
   { front: <EducationPage />, back: <ContactPage /> },
   { front: <Back />, back: <Back /> }
+];
+
+/**
+ * What each spread is called, indexed by how many leaves have been turned.
+ *
+ * The counter at the foot says where you are in the stack; this says what you
+ * are looking at, which is the thing a reader actually wants. Derived from the
+ * project data rather than typed out, so adding a fourth plate cannot leave a
+ * label pointing at the wrong spread.
+ */
+export const spreadTitles: string[] = [
+  'Front cover',
+  'Introduction',
+  ...projects.map((p) => p.title),
+  'Skills and workflow',
+  'Setup and education',
+  'Contact',
+  'Back cover'
 ];
 
 /**

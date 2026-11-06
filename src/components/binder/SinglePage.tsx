@@ -42,6 +42,14 @@ export const SinglePage = () => {
 
   return (
     <div className="room-light room-grain room-vignette relative flex min-h-screen w-full flex-col overflow-hidden">
+      {/*
+        The same room as the desk view, minus the parallax: there is no pointer
+        on a phone to stand in for the reader's head, and tying the lamp to
+        touch would move it only while a finger is down.
+      */}
+      <div className="lamp" />
+      <div className="motes" />
+
       <div
         className="relative flex flex-1 items-center justify-center px-5 py-16"
         style={{ perspective: '1600px' }}
@@ -55,14 +63,16 @@ export const SinglePage = () => {
           if (Math.abs(dx) > 44) go(dx < 0 ? 1 : -1);
         }}
       >
-        <div
+        <motion.div
           className="preserve-3d relative w-full"
           style={{ maxWidth: 'min(460px, 88vw)', aspectRatio: '3 / 4' }}
+          initial={reduce ? false : { opacity: 0, y: 34, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
           <div
-            className="absolute -inset-[9px] rounded-[6px]"
+            className="leather absolute -inset-[9px] overflow-hidden rounded-[6px]"
             style={{
-              background: 'var(--cover)',
               boxShadow: '0 40px 80px -24px rgba(0,0,0,0.85), 0 0 0 1px var(--cover-edge)'
             }}
           />
@@ -97,34 +107,39 @@ export const SinglePage = () => {
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="flex shrink-0 items-center justify-center gap-5 pb-7">
+      <motion.div
+        className="flex shrink-0 items-center justify-center gap-5 pb-7"
+        initial={reduce ? false : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <button
           onClick={() => go(-1)}
           disabled={atStart}
           aria-label="Previous page"
-          className="rounded-full border border-white/15 p-2.5 text-white/70 transition disabled:opacity-25"
+          className="chrome-btn rounded-full p-2.5"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <span className="plate-label" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <span className="plate-label tabular-nums" style={{ color: 'rgba(255,255,255,0.55)' }}>
           {String(index + 1).padStart(2, '0')} / {String(faces.length).padStart(2, '0')}
         </span>
         <button
           onClick={() => go(1)}
           disabled={atEnd}
           aria-label="Next page"
-          className="rounded-full border border-white/15 p-2.5 text-white/70 transition disabled:opacity-25"
+          className="chrome-btn rounded-full p-2.5"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M9 18l6-6-6-6" />
           </svg>
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 };
