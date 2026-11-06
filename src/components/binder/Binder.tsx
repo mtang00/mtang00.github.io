@@ -225,7 +225,7 @@ export const Binder = () => {
       <div
         ref={stage}
         className="relative mx-auto flex min-h-screen max-w-[1700px] select-none items-center justify-center px-3 pb-20 pt-6 sm:px-5"
-        style={{ perspective: '3200px', touchAction: 'pan-y', cursor: flip ? 'grabbing' : 'pointer' }}
+        style={{ perspective: '5200px', touchAction: 'pan-y', cursor: flip ? 'grabbing' : 'pointer' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
