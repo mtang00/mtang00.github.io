@@ -2,49 +2,227 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * The object is a black screw-post presentation binder lying open on a desk
+ * under a lamp. That scene, not a theme preference, is what makes the surround
+ * dark and the pages bright: paper is the only lit surface in the room.
+ *
+ * Colours are OKLCH. The neutrals carry a trace of the brand hue (265) rather
+ * than drifting warm, so the charcoal reads as the same family as the accent
+ * instead of as generic grey.
+ */
+:root {
+  /* The room and the desk the binder sits on. */
+  --room: oklch(0.14 0.014 265);
+  --room-lit: oklch(0.21 0.02 265);
+
+  /* The binder itself. */
+  --cover: oklch(0.21 0.012 265);
+  --cover-edge: oklch(0.28 0.014 265);
+  --post: oklch(0.72 0.015 255);
+
+  /* Paper, at chroma near zero so it never reads as cream. */
+  --page: oklch(0.975 0.002 265);
+  --page-edge: oklch(0.91 0.004 265);
+  --ink: oklch(0.23 0.012 265);
+  --ink-soft: oklch(0.47 0.012 265);
+  --rule: oklch(0.89 0.004 265);
+
+  /* The one accent, carried over from the previous site's primary-600. */
+  --accent: oklch(0.55 0.21 258);
+  --accent-soft: oklch(0.93 0.035 258);
+
+  /*
+   * Exponential ease-out. Paper decelerates hard and does not overshoot;
+   * anything with bounce reads as rubber.
+   */
+  --ease-page: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* A semantic stack, so nothing ever needs an arbitrary 9999. */
+  --z-page: 10;
+  --z-turning: 40;
+  --z-chrome: 60;
+  --z-overlay: 80;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply text-gray-900 bg-white;
+    margin: 0;
+    background: var(--room);
+    color: var(--page);
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
 @layer components {
-  .btn {
-    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 ease-out;
+  /*
+   * The lamp. A soft elliptical pool behind the binder so the object sits in
+   * a room rather than floating on a flat field.
+   */
+  .room-light {
+    background:
+      radial-gradient(
+        ellipse 120% 90% at 50% 38%,
+        var(--room-lit) 0%,
+        transparent 68%
+      ),
+      var(--room);
   }
-  
-  .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 hover:scale-105 active:scale-95;
+
+  /*
+   * Paper. The gradient is the lamp falling across the sheet, brighter at the
+   * top where the light is, and the inset edge is the cut edge of the stock.
+   */
+  /*
+   * Every page is a container, and all type on it is sized in `cqw`.
+   *
+   * The first pass sized headings in `vw`, which is wrong here in a way that
+   * only shows up at one breakpoint: a page's width is not proportional to the
+   * viewport. The spread gives each page about 40% of the window and the
+   * single-page view gives it nearly all of it, so `vw` type was tuned for one
+   * and overflowed the other. Container units track the thing the text is
+   * actually set on.
+   */
+  .sheet {
+    container-type: inline-size;
+    background:
+      linear-gradient(176deg, oklch(1 0 0 / 0.75) 0%, transparent 42%),
+      var(--page);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--page-edge);
   }
-  
-  .btn-secondary {
-    @apply bg-gray-600 text-white hover:bg-gray-700 hover:scale-105 active:scale-95;
+
+  /*
+   * The polypropylene sleeve over each plate. One shallow diagonal band, low
+   * opacity: a real sleeve catches the lamp in a single streak, and anything
+   * stronger tips into decorative glass.
+   */
+  .sleeve::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      104deg,
+      transparent 0%,
+      oklch(1 0 0 / 0.1) 38%,
+      oklch(1 0 0 / 0.16) 44%,
+      transparent 56%
+    );
   }
-  
-  .btn-outline {
-    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white hover:scale-105 active:scale-95;
+
+  /* The gutter. Pages curve into the spine, so the fold is always in shadow. */
+  .gutter-right {
+    background: linear-gradient(
+      to right,
+      oklch(0 0 0 / 0.3) 0%,
+      oklch(0 0 0 / 0.1) 3%,
+      transparent 11%
+    );
+  }
+
+  .gutter-left {
+    background: linear-gradient(
+      to left,
+      oklch(0 0 0 / 0.3) 0%,
+      oklch(0 0 0 / 0.1) 3%,
+      transparent 11%
+    );
+  }
+
+  .plate-label {
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+    font-size: clamp(0.58rem, 2.3cqw, 0.72rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* The page type scale, all of it relative to the page. */
+  .p-body {
+    font-size: clamp(0.74rem, 3cqw, 0.95rem);
+    line-height: 1.6;
+  }
+
+  .p-lead {
+    font-size: clamp(0.8rem, 3.3cqw, 1.04rem);
+    line-height: 1.65;
+  }
+
+  .p-title {
+    font-size: clamp(1.15rem, 6.4cqw, 2.75rem);
+  }
+
+  .p-title-lg {
+    font-size: clamp(1.4rem, 7.6cqw, 3.1rem);
+  }
+
+  .p-row {
+    padding-block: clamp(0.3rem, 1.5cqw, 0.75rem);
+  }
+
+  .p-gap {
+    gap: clamp(0.5rem, 2cqw, 1.1rem);
+  }
+
+  .display {
+    font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
   }
 }
 
 @layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
-  .gradient-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 }
 
-/* A nav that scrolls on narrow screens should not show a scrollbar doing it. */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/*
+ * Reduced motion keeps every destination reachable and simply stops the paper
+ * moving: spreads cross-fade in place instead of rotating. The content is
+ * never gated on a transition, so a headless renderer or a backgrounded tab
+ * still shows a complete page.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
