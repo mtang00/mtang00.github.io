@@ -75,13 +75,69 @@
    * a room rather than floating on a flat field.
    */
   .room-light {
+    isolation: isolate;
     background:
-      radial-gradient(
-        ellipse 120% 90% at 50% 38%,
-        var(--room-lit) 0%,
-        transparent 68%
+      /* The lamp, pooling on and around the binder. */
+      radial-gradient(ellipse 88% 58% at 50% 32%, oklch(0.265 0.024 265) 0%, transparent 64%),
+      /* The desk, a touch lighter than the wall and meeting it at a soft
+         horizon. Without a plane under it the binder floats in a void. */
+      linear-gradient(
+        to bottom,
+        transparent 52%,
+        oklch(0.185 0.015 262) 74%,
+        oklch(0.158 0.012 258) 100%
       ),
+      /* The room itself, falling away at the corners. */
+      radial-gradient(ellipse 150% 110% at 50% 4%, oklch(0.178 0.017 266), oklch(0.112 0.012 268) 72%),
       var(--room);
+  }
+
+  /*
+   * Film grain.
+   *
+   * Not decoration: a dark scene built from wide gradients bands badly on an
+   * 8-bit display, and the stepping is most visible exactly where this one is
+   * most gradual, around the lamp pool. A little noise dithers the steps away.
+   * Generated rather than loaded, so it costs no request.
+   */
+  .room-grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /*
+     * Behind the binder, above the room's own background.
+     * Both of these atmosphere layers started out painting over everything,
+     * including the paper, which put grain on the type and pulled the corners
+     * of every page into shadow. The room is the thing being lit here; the
+     * pages carry their own lighting and must not be touched by it.
+     */
+    z-index: -1;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Corners fall away, so the eye stays on the paper. */
+  .room-vignette::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background: radial-gradient(ellipse 86% 76% at 50% 42%, transparent 46%, rgba(0, 0, 0, 0.42) 100%);
+  }
+
+  /*
+   * The contact shadow where the binder meets the desk.
+   *
+   * Tighter and darker than the board's own drop shadow, which is the ambient
+   * one. Two shadows at different softnesses is what reads as an object
+   * resting on a surface rather than hovering above it.
+   */
+  .contact-shadow {
+    background: radial-gradient(ellipse 62% 52% at 50% 50%, rgba(0, 0, 0, 0.72), transparent 70%);
+    filter: blur(26px);
   }
 
   /*

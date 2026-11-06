@@ -24,6 +24,35 @@ export const Binder = () => {
     typeof window === 'undefined' ? true : window.innerWidth >= SPREAD_MIN_PX
   );
 
+  /*
+   * The screw posts are drawn outside the 3D stage, from the board's measured
+   * box, and this is what tracks it.
+   *
+   * They used to live inside the board with a z-index and then a translateZ,
+   * and neither works: the board is `preserve-3d`, so siblings sort by depth,
+   * and a sheet near edge-on sweeps some six hundred pixels toward the camera.
+   * No small depth offset survives that, so the sheet crossed through the post
+   * heads and left them looking half filled for most of every turn. A real
+   * screw post passes through the paper and is never behind it, so the honest
+   * fix is to take the posts out of the 3D space rather than to out-bid it.
+   */
+  useEffect(() => {
+    const el = boardRef.current;
+    if (!el) return;
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      setSpine({ x: r.left + r.width / 2, top: r.top, height: r.height });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [wide]);
+
   useEffect(() => {
     const mq = window.matchMedia(`(min-width: ${SPREAD_MIN_PX}px)`);
     const sync = () => setWide(mq.matches);
@@ -43,6 +72,7 @@ export const Binder = () => {
 
   const stage = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
+  const [spine, setSpine] = useState<{ x: number; top: number; height: number } | null>(null);
   const lastWheel = useRef(0);
   const drag = useRef<{ x: number; dir: 1 | -1; width: number } | null>(null);
 
@@ -216,11 +246,7 @@ export const Binder = () => {
   if (!wide) return <SinglePage />;
 
   return (
-    <div className="room-light relative min-h-screen w-full overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)' }}
-      />
+    <div className="room-light room-grain room-vignette relative min-h-screen w-full overflow-hidden">
 
       <div
         ref={stage}
@@ -242,10 +268,16 @@ export const Binder = () => {
           className="preserve-3d relative"
           style={{
             transform: 'rotateX(7deg)',
-            width: 'min(1560px, 96vw, calc((100vh - 6.5rem) * 1.5))',
+            width: 'min(1500px, 93vw, calc((100vh - 8.5rem) * 1.5))',
             aspectRatio: '3 / 2'
           }}
         >
+          {/* Where the binder meets the desk. Behind the board, hence -z. */}
+          <div
+            className="contact-shadow pointer-events-none absolute -inset-x-[6%] -bottom-[7%] h-[22%]"
+            style={{ transform: 'translateZ(-30px)' }}
+          />
+
           {/* The cover board, a hard black margin around the paper. */}
           <div
             className="absolute -inset-[11px] rounded-[7px]"
@@ -278,21 +310,33 @@ export const Binder = () => {
           )}
 
           {/* Screw posts, above the paper because the binding is on top of it. */}
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 z-[70] flex -translate-x-1/2 flex-col justify-center gap-[24%]">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="block h-3 w-3 rounded-full"
-                style={{
-                  background:
-                    'radial-gradient(circle at 35% 30%, var(--post), oklch(0.33 0.01 265))',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.7)'
-                }}
-              />
-            ))}
-          </div>
         </div>
       </div>
+
+      {spine && (
+        <div
+          className="pointer-events-none fixed flex flex-col justify-center gap-[24%]"
+          style={{
+            left: spine.x - 6,
+            top: spine.top,
+            height: spine.height,
+            width: 12,
+            zIndex: 55
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="block h-3 w-3 rounded-full"
+              style={{
+                background:
+                  'radial-gradient(circle at 35% 30%, var(--post), oklch(0.33 0.01 265))',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.35)'
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <div
         className="pointer-events-none fixed inset-x-0 bottom-0 flex items-center justify-center gap-5 pb-6"

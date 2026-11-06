@@ -41,7 +41,7 @@ export const SinglePage = () => {
   const atEnd = index === faces.length - 1;
 
   return (
-    <div className="room-light relative flex min-h-screen w-full flex-col overflow-hidden">
+    <div className="room-light room-grain room-vignette relative flex min-h-screen w-full flex-col overflow-hidden">
       <div
         className="relative flex flex-1 items-center justify-center px-5 py-16"
         style={{ perspective: '1600px' }}
