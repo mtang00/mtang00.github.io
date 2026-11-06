@@ -265,5 +265,111 @@ export const projects: Project[] = [
       moduleSystem: "ES6 modules with dependency injection — PointsCalculator, WorkoutManager, SocialManager, TrendsManager, TemplatesManager, GoalsManager, GroupsManager, ChallengesManager, WeightManager, SpectateManager, NotificationsManager, ReactionsManager, and others",
       testingApproach: "Manual testing with Docker for local development, deployed via SFTP with cache-busting"
     }
+  },
+  {
+    id: "roulette-royal",
+    title: "Roulette Royal",
+    description: "Multiplayer American roulette as a Discord Activity, with server-authoritative outcomes, provably-fair commit/reveal, and a real-time shared table for everyone in a voice channel",
+    longDescription: `Roulette Royal is a registered, verified Discord Activity: an embedded web app that launches inside a
+    Discord voice channel so everyone in that channel sits at one table, bets against one wheel, and watches a single spin
+    resolve together. The client is a Vite single-page app driving a canvas wheel with simulated ball physics; the server is
+    Node.js and Express with a WebSocket round clock that owns the RNG and every balance. A shared TypeScript package holds
+    the rules, payouts, economy and wire protocol, so both sides import the same source of truth and the test suite can
+    exercise it directly. Outcomes are decided server-side and only after betting closes, and each round publishes a SHA-256
+    commitment before the spin that is revealed afterwards, so players can verify the result was fixed in advance. Live in
+    production on Railway with 4,300+ player wallets.`,
+
+    technologies: [
+      "TypeScript",
+      "Vite",
+      "Node.js",
+      "Express 4",
+      "WebSocket (ws)",
+      "Discord Embedded App SDK",
+      "HTML5 Canvas",
+      "Discord OAuth2",
+      "Discord Monetization (SKUs)",
+      "Railway"
+    ],
+
+    features: [
+      "🎯 One shared table per voice channel, so everyone who launches from the same channel bets on the same wheel",
+      "🎰 Canvas wheel with simulated ball physics: deceleration, pocket capture, and a landing that matches the server's result",
+      "🔒 Provably fair rounds: a SHA-256 commitment is published before the spin and revealed after, so outcomes are verifiable",
+      "💰 Full American roulette bet set: straights, splits, corners, streets, dozens, columns, outside bets, and call bets",
+      "👤 Live seat cards showing each player's balance, stake and bet summary as the round fills",
+      "👀 Spectator mode: watchers sit outside the seat limit and can take a seat when one opens",
+      "🎁 Daily login streak, referral rewards, and a free top-up that is immediate and uncapped so nobody is ever asked to pay to keep playing",
+      "🛒 In-app storefront with six chip tiers and a subscription, purchased through Discord's own checkout",
+      "📱 Responsive down to 320px with a landscape layout for phones, measured at eight viewports rather than eyeballed",
+      "📊 Server-side funnel and retention instrumentation feeding a dedicated metrics endpoint"
+    ],
+
+    architecture: {
+      frontend: "Vite single-page app in TypeScript with a canvas wheel renderer, embedded via the Discord Embedded App SDK",
+      backend: "Node.js/Express with a ws WebSocket server owning the round clock, the RNG and every balance",
+      database: "JSON file persistence with atomic rename-on-write, keeping wallets and metrics in separate files so a corrupt counter can never cost anyone their balance",
+      deployment: "Railway, auto-deploying on push to main, pinned to a single replica because tables live in process memory"
+    },
+
+    highlights: [
+      "Server decides the winning pocket and only after betting closes, so the client never generates an outcome and no client-reported bet, balance or entitlement is trusted",
+      "Provably-fair commit/reveal: the round's seed is hashed and published before the spin, so a player can check afterwards that the result was not chosen to suit the house",
+      "Shared TypeScript package imported by both client and server, so payouts and the 5.26% house edge are asserted by the same tests both sides run against",
+      "30-message typed WebSocket protocol covering betting, settlement, presence, spectating, emotes, purchases and reconnection",
+      "250 tests across 16 suites, with the house-edge test as the one that matters, since money logic is confined to a single module by design",
+      "Six weeks of production measurement: funnel, retention and checkout instrumentation used to run pre-registered experiments with stated falsifiers rather than post-hoc explanations"
+    ],
+
+    links: {
+      live: undefined,
+      demo: undefined
+    },
+
+    images: [
+      {
+        url: "/assets/roulette/table_desktop.png",
+        description: "The Shared Table - One Wheel for the Whole Voice Channel",
+        businessImpact: "Everyone who launches the activity from the same Discord voice channel lands here, at the same table, watching the same wheel. The 38-pocket American layout (0 and 00) sits above the full felt, with seat cards on the left showing who else is playing and what they are holding. Because the activity runs inside Discord, there is no install, no account to create and no link to share, so people already talking to each other are one click from playing together."
+      },
+      {
+        url: "/assets/roulette/betting_desktop.png",
+        description: "Placing Bets - Live Stake Readout as the Round Fills",
+        businessImpact: "Pick a chip from the rack and click the felt; every bet lands instantly with its stake shown on the spot. The header tracks the committed stake (Bet 600) separately from the balance, and the seat card updates to '4,650 · 600 out' with a running summary of exactly which bets are live. Undo, redo, clear, rebet and double are all one click, and an auto-rebet toggle repeats the same spread every round for players who have settled on a system."
+      },
+      {
+        url: "/assets/roulette/shop_desktop.png",
+        description: "Chip Store - Six Tiers and a Subscription, Through Discord Checkout",
+        businessImpact: "Chips can be bought but never cashed out, transferred or redeemed outside the game. A purchase buys more play, never better odds, and the wheel is the same 38 pockets for everyone. Purchases run through Discord's own checkout, so no payment details ever touch this app. The figure on each card is deliberately the figure Discord is about to charge for: an earlier version showed the doubled first-purchase amount and quietly broke checkout for first-time buyers until the funnel instrumentation caught it."
+      },
+      {
+        url: "/assets/roulette/table_mobile.png",
+        description: "Mobile Portrait - The Whole Game on a Phone",
+        businessImpact: "Discord Activities launch on phones as readily as desktops, so the felt reflows rather than shrinking: the number grid scrolls horizontally, outside bets stack, and the chip rack and Ready button stay within thumb's reach at the bottom. Layout here is verified by an automated audit across eight viewports down to 320px, because the real defects in this area passed every visual check and were only ever visible as numbers."
+      },
+      {
+        url: "/assets/roulette/table_mobile_landscape.png",
+        description: "Mobile Landscape - The Full Board, No Scrolling",
+        businessImpact: "Turned sideways, the entire board fits with nothing cut off and nothing to scroll: the wheel, the full three-row number grid and every outside bet at once. The app detects an upright phone and suggests the rotation once, timed to land after the first betting window so it never collides with a message about free chips."
+      }
+    ],
+
+    workflow: [
+      "Launch from a Discord voice channel: OAuth handshake, then join the table keyed to that activity instance",
+      "Claim the daily login streak and any referral chips before the first round",
+      "Place bets during the betting window, with live validation against the balance and the rules",
+      "Betting closes, the server derives the pocket from the committed seed, and the wheel animates to the result",
+      "Settlement pays every bet from the shared payout table and broadcasts updated balances",
+      "Bust, and the free top-up lands immediately, then either rebet, spectate, or open the shop"
+    ],
+
+    technicalDetails: {
+      lines: "25,000+",
+      files: "53 TypeScript/CSS source files (14 client, 9 server, 16 shared, 14 test suites)",
+      apiEndpoints: "5 REST endpoints (OAuth token exchange, config, health, metrics, export) plus a 30-message typed WebSocket protocol",
+      databaseTables: "No SQL database. JSON file persistence with atomic rename-on-write, wallets and metrics in separate files so a corrupt counter cannot cost anyone their balance",
+      moduleSystem: "ES modules with a shared TypeScript package imported by both client and server, defining rules, payouts, fairness, economy and wire protocol once",
+      testingApproach: "250 tests across 16 suites run with the Node test runner, plus an automated multi-viewport layout audit and headless multiplayer smoke tests against a live server"
+    }
   }
 ];
