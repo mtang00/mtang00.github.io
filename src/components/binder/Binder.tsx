@@ -196,6 +196,17 @@ export const Binder = () => {
     };
   }, [px, py, reduce]);
 
+  /*
+   * Every transition that fires on a page turn, with its duration.
+   *
+   * Reduced motion has to be applied here and not only in the stylesheet.
+   * The global rule collapses `transition-duration` and `animation-duration`,
+   * which covers CSS, but framer drives these through the Web Animations API
+   * and reads neither property: the progress bar, the fore-edges and the
+   * spread title went on sliding for anyone who had asked them not to.
+   */
+  const ease = (d: number) => ({ duration: reduce ? 0 : d, ease: [0.16, 1, 0.3, 1] as const });
+
   /* --- Turning ------------------------------------------------------------ */
 
   const atStart = turned === 0;
@@ -480,7 +491,7 @@ export const Binder = () => {
             }}
             animate={{ width: edgeLeft, opacity: edgeLeft > 0 ? 0.88 : 0 }}
             initial={false}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={ease(0.5)}
           />
           <motion.div
             className="fore-edge pointer-events-none absolute"
@@ -493,7 +504,7 @@ export const Binder = () => {
             }}
             animate={{ width: edgeRight, opacity: edgeRight > 0 ? 0.88 : 0 }}
             initial={false}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={ease(0.5)}
           />
 
           {/* Left page, lying flat. Its spine is its right edge. */}
@@ -568,13 +579,9 @@ export const Binder = () => {
                 // Its own timing. An exiting child keeps the props it was
                 // rendered with, so the hint would otherwise take its 1.4s
                 // entrance delay with it on the way out.
-                transition: { duration: 0.3, delay: 0 }
+                transition: { duration: reduce ? 0 : 0.3, delay: 0 }
               }}
-              transition={{
-                duration: 0.3,
-                delay: hint ? 1.4 : 0,
-                ease: [0.16, 1, 0.3, 1]
-              }}
+              transition={{ ...ease(0.3), delay: hint && !reduce ? 1.4 : 0 }}
             >
               {hint ? 'Drag the page, or use the arrow keys' : (spreadTitles[turned] ?? '')}
             </motion.p>
@@ -614,7 +621,7 @@ export const Binder = () => {
                 style={{ background: 'var(--accent)' }}
                 animate={{ scaleX: progress }}
                 initial={false}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={ease(0.5)}
               />
               {/* The head of the bar carries the only glow in the chrome. */}
               <motion.span
@@ -627,7 +634,7 @@ export const Binder = () => {
                 }}
                 animate={{ left: `${progress * 100}%`, opacity: progress > 0 ? 1 : 0 }}
                 initial={false}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={ease(0.5)}
               />
             </span>
           </div>

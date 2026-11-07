@@ -242,7 +242,18 @@ const ProjectPlate = ({ index }: { index: number }) => {
             <img
               src={url}
               alt={caption || p.title}
-              loading="lazy"
+              /*
+                Eager, and decoded before it is presented.
+                `loading="lazy"` was deferring the fetch until the plate was
+                judged to be near the viewport, and a plate only enters the
+                DOM at the moment its spread becomes current. The turn was
+                therefore uncovering an empty frame and the picture arrived
+                afterwards. These three files are preloaded and decoded at
+                startup, so `sync` costs nothing here and guarantees the
+                sheet is carrying its picture the moment it is uncovered.
+              */
+              loading="eager"
+              decoding="sync"
               className="block h-full w-full object-cover"
             />
           )}
@@ -386,6 +397,21 @@ export const leaves: BinderLeaf[] = [
   { front: <EducationPage />, back: <ContactPage /> },
   { front: <Back />, back: <Back /> }
 ];
+
+/**
+ * Every picture the binder can put on a page.
+ *
+ * Exactly the plates, and deliberately not every image in the project data:
+ * a plate shows `images[0]` and nothing else reaches the screen, so the other
+ * twenty-odd files would be megabytes fetched for nobody. These three are
+ * what <preloadPlates> pulls in before anyone turns a page.
+ */
+export const plateImages: string[] = projects
+  .map((p) => {
+    const img = p.images[0];
+    return typeof img === 'string' ? img : img?.url;
+  })
+  .filter((url): url is string => Boolean(url));
 
 /**
  * What each spread is called, indexed by how many leaves have been turned.
