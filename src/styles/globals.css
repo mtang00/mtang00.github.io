@@ -475,6 +475,70 @@
     );
   }
 
+  /*
+   * A punched hole.
+   *
+   * It is a hole, so it shows what is under the sheet, which on every spread
+   * is the cover board. The inset shadow is the paper's own cut edge turning
+   * down into it, heavier at the top where the lamp is, and it is the whole
+   * reason this reads as punched rather than printed.
+   */
+  .punch {
+    position: absolute;
+    height: 2.7%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    background: oklch(0.14 0.012 265);
+    box-shadow:
+      inset 0 2px 4px -1px rgba(0, 0, 0, 0.9),
+      inset 0 -1.5px 1px rgba(255, 255, 255, 0.09),
+      0 0 0 0.5px rgba(0, 0, 0, 0.45);
+  }
+
+  /*
+   * The ring, seen from above: the crown of the loop, not a circle.
+   *
+   * The gradient is a round wire under a lamp that is above and in front, so
+   * the specular sits just above the middle and the underside goes dark
+   * before picking up a little bounce from the paper. The inset shadows at
+   * each end are where the wire turns down through the holes.
+   */
+  .ring {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.56 0.008 255) 0%,
+      oklch(0.87 0.005 255) 20%,
+      oklch(0.98 0.003 255) 36%,
+      oklch(0.66 0.009 258) 64%,
+      oklch(0.38 0.012 258) 86%,
+      oklch(0.55 0.008 255) 100%
+    );
+    box-shadow:
+      0 3px 6px -1px rgba(0, 0, 0, 0.6),
+      inset 4px 0 5px -4px rgba(0, 0, 0, 0.5),
+      inset -4px 0 5px -4px rgba(0, 0, 0, 0.5);
+  }
+
+  /*
+   * The spine mechanism the rings are riveted to.
+   *
+   * Dark steel, because it sits at the bottom of the gutter where the pages
+   * curve in over it and almost no light reaches. The highlight is one thin
+   * line down its near shoulder, not a full metallic ramp: lit like the rings
+   * it became a chrome rod running the height of the spread and pulled the
+   * eye off the pages entirely.
+   */
+  .spine-plate {
+    background: linear-gradient(
+      to right,
+      oklch(0.17 0.008 258),
+      oklch(0.38 0.006 255) 30%,
+      oklch(0.24 0.008 258) 52%,
+      oklch(0.14 0.01 258)
+    );
+    box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.8);
+  }
+
   .plate-label {
     font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
     font-size: clamp(0.58rem, 2.3cqw, 0.72rem);

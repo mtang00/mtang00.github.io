@@ -1,5 +1,6 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { Punches } from './Binding';
 
 interface LeafProps {
   /** 0 is flat on the right, -180 is flat on the left. */
@@ -159,6 +160,8 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
           shadow on the same edge.
         */}
         <div className="gutter-right pointer-events-none absolute inset-0" />
+        {/* Punched like every other sheet, and the holes travel with it. */}
+        <Punches spine="left" />
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{ background: frontLight }}
@@ -186,6 +189,9 @@ export const Leaf = ({ rotation, front, back, zIndex }: LeafProps) => {
           the shadow had gone to the outer edge instead.
         */}
         <div className="gutter-left pointer-events-none absolute inset-0" />
+        {/* Mirrored by this face's own 180deg flip, so the holes go on the
+            right here to land on the left, exactly as the gutter does. */}
+        <Punches spine="right" />
         <motion.div
           className="pointer-events-none absolute inset-0"
           style={{ background: backLight }}

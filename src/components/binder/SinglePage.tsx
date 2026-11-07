@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { faces } from '../../data/pages';
+import { FlatRings, Punches } from './Binding';
 
 /**
  * The binder on a narrow screen: one face at a time.
@@ -51,7 +52,9 @@ export const SinglePage = () => {
       <div className="motes" />
 
       <div
-        className="relative flex flex-1 items-center justify-center px-5 py-16"
+        /* More room on the spine side than the fore-edge, because the board
+           and the rings both stick out further there. */
+        className="relative flex flex-1 items-center justify-center py-16 pl-10 pr-5"
         style={{ perspective: '1600px' }}
         onTouchStart={(e) => {
           touch.current = e.touches[0].clientX;
@@ -64,14 +67,22 @@ export const SinglePage = () => {
         }}
       >
         <motion.div
-          className="preserve-3d relative w-full"
+          className="relative w-full"
           style={{ maxWidth: 'min(460px, 88vw)', aspectRatio: '3 / 4' }}
           initial={reduce ? false : { opacity: 0, y: 34, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
+          <div className="preserve-3d absolute inset-0">
+          {/*
+            Wider on the spine side than anywhere else.
+            The rings reach a hole's distance past the page's left edge, which
+            is further than a 9px margin, so an even inset left them hanging
+            in the room with nothing behind them. A binder has more board on
+            the spine side than at the fore-edge anyway.
+          */}
           <div
-            className="leather absolute -inset-[9px] overflow-hidden rounded-[6px]"
+            className="leather absolute -inset-[9px] -left-[26px] overflow-hidden rounded-[6px]"
             style={{
               boxShadow: '0 40px 80px -24px rgba(0,0,0,0.85), 0 0 0 1px var(--cover-edge)'
             }}
@@ -79,6 +90,7 @@ export const SinglePage = () => {
           {/* The next face, already sitting underneath the one leaving. */}
           <div className="absolute inset-0 overflow-hidden rounded-[3px]">
             {faces[index]}
+            <Punches spine="left" />
           </div>
 
           <AnimatePresence initial={false} custom={dir}>
@@ -91,22 +103,14 @@ export const SinglePage = () => {
               transition={{ duration: reduce ? 0.15 : 0.56, ease: [0.16, 1, 0.3, 1] }}
             >
               {faces[index]}
+              <Punches spine="left" />
             </motion.div>
           </AnimatePresence>
 
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-[70] flex flex-col justify-center gap-[26%] pl-1">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="block h-2.5 w-2.5 rounded-full"
-                style={{
-                  background:
-                    'radial-gradient(circle at 35% 30%, var(--post), oklch(0.33 0.01 265))',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.7)'
-                }}
-              />
-            ))}
           </div>
+
+          {/* Outside the stage above, so a turning sheet cannot cut it. */}
+          <FlatRings />
         </motion.div>
       </div>
 

@@ -9,6 +9,7 @@ import {
   useTransform
 } from 'framer-motion';
 import { Leaf } from './Leaf';
+import { Punches, Rings } from './Binding';
 import { leaves, spreadTitles } from '../../data/pages';
 import { SinglePage } from './SinglePage';
 
@@ -36,35 +37,6 @@ export const Binder = () => {
     typeof window === 'undefined' ? true : window.innerWidth >= SPREAD_MIN_PX
   );
 
-  /*
-   * The screw posts are drawn outside the 3D stage, from the board's measured
-   * box, and this is what tracks it.
-   *
-   * They used to live inside the board with a z-index and then a translateZ,
-   * and neither works: the board is `preserve-3d`, so siblings sort by depth,
-   * and a sheet near edge-on sweeps some six hundred pixels toward the camera.
-   * No small depth offset survives that, so the sheet crossed through the post
-   * heads and left them looking half filled for most of every turn. A real
-   * screw post passes through the paper and is never behind it, so the honest
-   * fix is to take the posts out of the 3D space rather than to out-bid it.
-   */
-  useEffect(() => {
-    const el = boardRef.current;
-    if (!el) return;
-    const measure = () => {
-      const r = el.getBoundingClientRect();
-      setSpine({ x: r.left + r.width / 2, top: r.top, height: r.height });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    window.addEventListener('resize', measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [wide]);
-
   useEffect(() => {
     const mq = window.matchMedia(`(min-width: ${SPREAD_MIN_PX}px)`);
     const sync = () => setWide(mq.matches);
@@ -84,9 +56,62 @@ export const Binder = () => {
 
   const stage = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
-  const [spine, setSpine] = useState<{ x: number; top: number; height: number } | null>(null);
+  const [spine, setSpine] = useState<
+    { x: number; top: number; height: number; width: number; ys: number[] } | null
+  >(null);
+  /*
+   * Set once the arrival has finished, purely to re-measure.
+   *
+   * The board is scaled and translated while it comes down, and a box read
+   * mid-entrance puts the rings somewhere the spine is not.
+   */
+  const [landed, setLanded] = useState(reduce);
   const lastWheel = useRef(0);
   const drag = useRef<{ x: number; dir: 1 | -1; width: number } | null>(null);
+
+  /*
+   * The rings are drawn outside the 3D stage, from the board's measured box,
+   * and this is what tracks it.
+   *
+   * They used to live inside the board with a z-index and then a translateZ,
+   * and neither works: the board is `preserve-3d`, so siblings sort by depth,
+   * and a sheet near edge-on sweeps some six hundred pixels toward the camera.
+   * No small depth offset survives that, so the sheet crossed through the post
+   * heads and left them looking half filled for most of every turn. A real
+   * ring passes through the paper and is never behind it, so the honest fix
+   * is to take the binding out of the 3D space rather than to out-bid it.
+   */
+  useEffect(() => {
+    const el = boardRef.current;
+    if (!el) return;
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      /*
+       * The hole centres are read off the page rather than worked out from
+       * the board's box. The board is tilted under a perspective, so its top
+       * is further from the camera than its bottom and the projection down
+       * its length is not linear: a hole at 25% of the page does not land at
+       * 25% of the projected rectangle.
+       *
+       * Only the flat right page is measured. The leaf in flight carries
+       * punches too, and during a turn its holes are anywhere but the spine.
+       */
+      const punches = el.querySelectorAll('[data-page="right"] .punch');
+      const ys = [...punches].map((p) => {
+        const b = p.getBoundingClientRect();
+        return b.top + b.height / 2;
+      });
+      setSpine({ x: r.left + r.width / 2, top: r.top, height: r.height, width: r.width, ys });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [wide, landed]);
 
   /* --- The scene ---------------------------------------------------------- */
 
@@ -98,8 +123,6 @@ export const Binder = () => {
    * parked at its starting transform.
    */
   const intro = useMotionValue(reduce ? 1 : 0);
-  /** A few pixels of give when a sheet lands. Paper has weight. */
-  const settle = useMotionValue(0);
 
   /*
    * Viewpoint parallax, not a moving light.
@@ -110,18 +133,27 @@ export const Binder = () => {
    * followed the cursor would be a light on a stick. This is the whole reason
    * the pool was split out of the room's background into its own layer.
    *
-   * Both rotations stay under three degrees. The screw posts are positioned
-   * from a measured box that a transform does not update, and the board's
-   * centre is the one point a rotation about its own centre leaves fixed, so
-   * the posts hold at the spine as long as the angles stay small.
+   * Both rotations stay under three degrees. The rings are positioned from a
+   * measured box that a transform does not update, and the board's centre is
+   * the one point a rotation about its own centre leaves fixed, so the
+   * binding holds at the spine as long as the angles stay small.
    */
   const px = useSpring(0, { stiffness: 46, damping: 18, mass: 0.7 });
   const py = useSpring(0, { stiffness: 46, damping: 18, mass: 0.7 });
 
+  /*
+   * No landing bounce here, on purpose.
+   *
+   * A sheet dropping onto the stack does press the block down and back, and
+   * it was built that way. On screen it read as the whole binder twitching a
+   * moment after the page had already come to rest, which is worse than no
+   * weight at all: the eye reads it as the layout settling rather than as
+   * paper. The weight belongs in the sheet's own deceleration.
+   */
   const boardTransform = useTransform(
-    [intro, settle, px, py],
-    ([i, s, x, y]: number[]) =>
-      `translate3d(0, ${((1 - i) * 54 + s).toFixed(2)}px, 0)` +
+    [intro, px, py],
+    ([i, x, y]: number[]) =>
+      `translate3d(0, ${((1 - i) * 54).toFixed(2)}px, 0)` +
       ` scale(${(0.93 + i * 0.07).toFixed(4)})` +
       ` rotateX(${(7 + (1 - i) * 11 - y * 2.2).toFixed(2)}deg)` +
       ` rotateY(${(x * 2.6).toFixed(2)}deg)`
@@ -135,7 +167,12 @@ export const Binder = () => {
 
   useEffect(() => {
     if (reduce) return;
-    const run = animate(intro, 1, { duration: 1.15, delay: 0.12, ease: [0.16, 1, 0.3, 1] });
+    const run = animate(intro, 1, {
+      duration: 1.15,
+      delay: 0.12,
+      ease: [0.16, 1, 0.3, 1],
+      onComplete: () => setLanded(true)
+    });
     return () => run.stop();
   }, [intro, reduce]);
 
@@ -188,25 +225,6 @@ export const Binder = () => {
       const land = () => {
         setTurned((t) => t + dir);
         setFlip(null);
-        /*
-         * The thunk.
-         *
-         * A sheet dropping onto the stack presses the whole block down a hair
-         * and it comes back. Three pixels, and it is the difference between a
-         * page that arrives and one that is simply there.
-         *
-         * It rides on the board rather than on the sheet, deliberately: by
-         * the time this fires the sheet has already handed over to the flat
-         * page, and anything attached to the sheet would be a jump at the one
-         * frame the eye is already watching.
-         */
-        if (!reduce) {
-          animate(settle, [0, 3.2, 0], {
-            duration: 0.46,
-            times: [0, 0.26, 1],
-            ease: [0.16, 1, 0.3, 1]
-          });
-        }
       };
 
       if (reduce) {
@@ -224,7 +242,7 @@ export const Binder = () => {
         onComplete: land
       });
     },
-    [atEnd, atStart, flip, reduce, rotation, settle, turned]
+    [atEnd, atStart, flip, reduce, rotation, turned]
   );
 
   /** Snap the sheet home when a drag did not travel far enough to commit. */
@@ -466,16 +484,21 @@ export const Binder = () => {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
 
-          {/* Left page, lying flat. */}
+          {/* Left page, lying flat. Its spine is its right edge. */}
           <div className="absolute inset-y-0 left-0 right-1/2 overflow-hidden rounded-l-[3px]">
             {leaves[leftIndex]?.back ?? board}
             <div className="gutter-left pointer-events-none absolute inset-0" />
+            <Punches spine="right" />
           </div>
 
-          {/* Right page, lying flat. */}
-          <div className="absolute inset-y-0 left-1/2 right-0 overflow-hidden rounded-r-[3px]">
+          {/* Right page, lying flat. Its spine is its left edge. */}
+          <div
+            data-page="right"
+            className="absolute inset-y-0 left-1/2 right-0 overflow-hidden rounded-r-[3px]"
+          >
             {leaves[rightIndex]?.front ?? board}
             <div className="gutter-right pointer-events-none absolute inset-0" />
+            <Punches spine="left" />
           </div>
 
           {flip !== null && leaves[flip.leaf] && (
@@ -487,36 +510,12 @@ export const Binder = () => {
             />
           )}
 
-          {/* Screw posts, above the paper because the binding is on top of it. */}
+          {/* The rings are drawn outside this stage. See <Rings>. */}
         </motion.div>
       </div>
 
-      {spine && (
-        <div
-          className="pointer-events-none fixed flex flex-col justify-center gap-[24%]"
-          style={{
-            left: spine.x - 6,
-            top: spine.top,
-            height: spine.height,
-            width: 12,
-            zIndex: 55
-          }}
-        >
-          {[0, 1, 2].map((i) => (
-            <motion.span
-              key={i}
-              className="block h-3 w-3 rounded-full"
-              style={{
-                background:
-                  'radial-gradient(circle at 35% 30%, var(--post), oklch(0.33 0.01 265))',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.35)'
-              }}
-              initial={reduce ? false : { scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.6 + i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-          ))}
-        </div>
+      {spine && spine.ys.length > 0 && (
+        <Rings x={spine.x} top={spine.top} height={spine.height} width={spine.width} ys={spine.ys} />
       )}
 
       {/* The chrome arrives last, once the binder is already down on the desk. */}
