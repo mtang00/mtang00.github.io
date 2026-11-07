@@ -100,6 +100,142 @@
    * tight hot core inside a wide falloff, because a single gradient reads as
    * a vignette and not as a light.
    */
+  /*
+   * The lamp drifting, and the contact shadow answering it.
+   *
+   * This is the one piece of background motion that reaches the middle of
+   * the screen. Everything else has to live in the bands either side of the
+   * binder, because the binder covers the rest. A light that moves and a
+   * shadow that does not would be worse than neither, so the two are one
+   * period apart in phase: the shadow leans away from wherever the light is.
+   *
+   * Seventeen seconds, which is far slower than a lamp on a cord would
+   * actually swing. At a real swing's pace it reads as a fault; this reads as
+   * air moving in the room.
+   */
+  .lamp-sway {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    animation: lamp-sway 17s ease-in-out infinite;
+  }
+
+  @keyframes lamp-sway {
+    0%,
+    100% {
+      transform: translate3d(-16px, -6px, 0);
+    }
+    50% {
+      transform: translate3d(16px, 6px, 0);
+    }
+  }
+
+  .shadow-sway {
+    animation: shadow-sway 17s ease-in-out infinite;
+  }
+
+  @keyframes shadow-sway {
+    0%,
+    100% {
+      transform: translateZ(-30px) translateX(10px) scaleX(1.03);
+    }
+    50% {
+      transform: translateZ(-30px) translateX(-10px) scaleX(0.97);
+    }
+  }
+
+  /*
+   * Haze drifting through the beam.
+   *
+   * Three soft volumes, each on its own period so they never line up and the
+   * loop never announces itself. They sit at the edges on purpose: the board
+   * occupies the middle of the window at every size, so anything animating
+   * behind it is only ever seen in the columns down either side and the strip
+   * along the desk.
+   *
+   * Radial gradients rather than blurred discs. A 40vw element under
+   * `filter: blur(60px)` is a full-screen blur pass every frame, and it buys
+   * nothing a gradient does not already give.
+   */
+  .haze {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .haze > span {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    will-change: transform, opacity;
+  }
+
+  .haze > span:nth-child(1) {
+    left: -16vw;
+    top: 4%;
+    width: 44vw;
+    height: 52vh;
+    background: radial-gradient(closest-side, oklch(0.52 0.036 262 / 0.9), transparent);
+    animation: haze-a 29s ease-in-out infinite;
+  }
+
+  .haze > span:nth-child(2) {
+    right: -18vw;
+    top: 22%;
+    width: 48vw;
+    height: 58vh;
+    background: radial-gradient(closest-side, oklch(0.5 0.04 268 / 0.85), transparent);
+    animation: haze-b 41s ease-in-out infinite;
+  }
+
+  .haze > span:nth-child(3) {
+    left: 18%;
+    bottom: -22vh;
+    width: 64vw;
+    height: 40vh;
+    background: radial-gradient(closest-side, oklch(0.47 0.03 258 / 0.8), transparent);
+    animation: haze-c 34s ease-in-out infinite;
+  }
+
+  @keyframes haze-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.35;
+    }
+    50% {
+      transform: translate3d(5vw, 7vh, 0) scale(1.22);
+      opacity: 1;
+    }
+  }
+
+  @keyframes haze-b {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1.15);
+      opacity: 0.9;
+    }
+    50% {
+      transform: translate3d(-4vw, -9vh, 0) scale(0.92);
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes haze-c {
+    0%,
+    100% {
+      transform: translate3d(-6vw, 0, 0) scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translate3d(6vw, -4vh, 0) scale(1.14);
+      opacity: 0.85;
+    }
+  }
+
   .lamp {
     position: absolute;
     /*
@@ -114,14 +250,12 @@
      */
     inset: -8%;
     /*
-     * Below the grain, which is at -1.
-     *
-     * The grain exists to dither this gradient's banding on an 8-bit display,
-     * and a layer painted above it is not dithered by it. Negative z-index
-     * children still paint above the room's own background, so -2 keeps the
-     * lamp in the room and under the noise.
+     * The depth lives on `.lamp-sway` around this, at -2, below the grain at
+     * -1. The grain is there to dither this gradient's banding on an 8-bit
+     * display, and a layer painted above the noise is not dithered by it.
+     * Negative z-index children still paint above the room's own background,
+     * so -2 keeps the lamp inside the room and underneath the noise.
      */
-    z-index: -2;
     pointer-events: none;
     will-change: transform;
     animation: lamp-breathe 13s ease-in-out infinite;
@@ -155,6 +289,12 @@
     z-index: -1;
     pointer-events: none;
     overflow: hidden;
+    /*
+     * The first pass put these at a third of this brightness and they were
+     * invisible in every screenshot: they only ever show in the bands either
+     * side of the binder, and the vignette is already pulling those down.
+     */
+    opacity: 0.9;
   }
 
   .motes::before,
@@ -168,32 +308,32 @@
 
   .motes::before {
     background-image:
-      radial-gradient(1.7px 1.7px at 12% 22%, rgba(255, 255, 255, 0.55), transparent 64%),
-      radial-gradient(1.2px 1.2px at 27% 61%, rgba(255, 255, 255, 0.4), transparent 64%),
-      radial-gradient(2.1px 2.1px at 40% 33%, rgba(255, 255, 255, 0.28), transparent 64%),
-      radial-gradient(1.3px 1.3px at 57% 73%, rgba(255, 255, 255, 0.45), transparent 64%),
-      radial-gradient(1.8px 1.8px at 68% 19%, rgba(255, 255, 255, 0.33), transparent 64%),
-      radial-gradient(1.1px 1.1px at 82% 54%, rgba(255, 255, 255, 0.5), transparent 64%),
-      radial-gradient(1.5px 1.5px at 93% 37%, rgba(255, 255, 255, 0.3), transparent 64%);
-    animation: motes-rise 34s linear infinite;
+      radial-gradient(2.4px 2.4px at 12% 22%, rgba(255, 255, 255, 0.8), transparent 64%),
+      radial-gradient(1.8px 1.8px at 27% 61%, rgba(255, 255, 255, 0.6), transparent 64%),
+      radial-gradient(2.9px 2.9px at 40% 33%, rgba(255, 255, 255, 0.45), transparent 64%),
+      radial-gradient(2px 2px at 57% 73%, rgba(255, 255, 255, 0.7), transparent 64%),
+      radial-gradient(2.5px 2.5px at 68% 19%, rgba(255, 255, 255, 0.5), transparent 64%),
+      radial-gradient(1.7px 1.7px at 82% 54%, rgba(255, 255, 255, 0.75), transparent 64%),
+      radial-gradient(2.2px 2.2px at 93% 37%, rgba(255, 255, 255, 0.5), transparent 64%);
+    animation: motes-rise 27s linear infinite;
   }
 
   .motes::after {
     background-image:
-      radial-gradient(1.1px 1.1px at 7% 48%, rgba(255, 255, 255, 0.4), transparent 64%),
-      radial-gradient(1.6px 1.6px at 21% 14%, rgba(255, 255, 255, 0.3), transparent 64%),
-      radial-gradient(1.2px 1.2px at 34% 80%, rgba(255, 255, 255, 0.45), transparent 64%),
-      radial-gradient(1.9px 1.9px at 49% 44%, rgba(255, 255, 255, 0.24), transparent 64%),
-      radial-gradient(1.3px 1.3px at 63% 29%, rgba(255, 255, 255, 0.4), transparent 64%),
-      radial-gradient(1.5px 1.5px at 76% 68%, rgba(255, 255, 255, 0.28), transparent 64%),
-      radial-gradient(1.2px 1.2px at 89% 12%, rgba(255, 255, 255, 0.42), transparent 64%);
-    animation: motes-rise 53s linear infinite;
-    animation-delay: -21s;
+      radial-gradient(1.7px 1.7px at 7% 48%, rgba(255, 255, 255, 0.62), transparent 64%),
+      radial-gradient(2.3px 2.3px at 21% 14%, rgba(255, 255, 255, 0.48), transparent 64%),
+      radial-gradient(1.9px 1.9px at 34% 80%, rgba(255, 255, 255, 0.68), transparent 64%),
+      radial-gradient(2.6px 2.6px at 49% 44%, rgba(255, 255, 255, 0.4), transparent 64%),
+      radial-gradient(2px 2px at 63% 29%, rgba(255, 255, 255, 0.6), transparent 64%),
+      radial-gradient(2.2px 2.2px at 76% 68%, rgba(255, 255, 255, 0.45), transparent 64%),
+      radial-gradient(1.8px 1.8px at 89% 12%, rgba(255, 255, 255, 0.64), transparent 64%);
+    animation: motes-drift 44s linear infinite;
+    animation-delay: -17s;
   }
 
   @keyframes motes-rise {
     0% {
-      transform: translate3d(0, 9%, 0);
+      transform: translate3d(-2%, 11%, 0);
       opacity: 0;
     }
     16% {
@@ -203,7 +343,25 @@
       opacity: 1;
     }
     100% {
-      transform: translate3d(1.6%, -9%, 0);
+      transform: translate3d(2%, -11%, 0);
+      opacity: 0;
+    }
+  }
+
+  /* The far layer, crossing the other way so the field has depth. */
+  @keyframes motes-drift {
+    0% {
+      transform: translate3d(3%, 9%, 0);
+      opacity: 0;
+    }
+    18% {
+      opacity: 0.85;
+    }
+    82% {
+      opacity: 0.85;
+    }
+    100% {
+      transform: translate3d(-3%, -9%, 0);
       opacity: 0;
     }
   }
@@ -241,7 +399,7 @@
     inset: 0;
     pointer-events: none;
     z-index: -1;
-    background: radial-gradient(ellipse 86% 76% at 50% 42%, transparent 46%, rgba(0, 0, 0, 0.42) 100%);
+    background: radial-gradient(ellipse 92% 82% at 50% 42%, transparent 54%, rgba(0, 0, 0, 0.34) 100%);
   }
 
   /*
@@ -632,8 +790,21 @@
     display: none;
   }
 
-  .lamp {
+  .lamp,
+  .lamp-sway,
+  .shadow-sway,
+  .haze > span {
     animation: none;
     opacity: 1;
+    transform: none;
+  }
+
+  /*
+   * The contact shadow keeps its depth, which `transform: none` above would
+   * take away: without the translateZ it stops sitting behind the board and
+   * paints over the pages instead.
+   */
+  .shadow-sway {
+    transform: translateZ(-30px);
   }
 }

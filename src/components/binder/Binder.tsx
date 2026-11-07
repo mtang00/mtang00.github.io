@@ -380,7 +380,20 @@ export const Binder = () => {
 
   return (
     <div className="room-light room-grain room-vignette relative min-h-screen w-full overflow-hidden">
-      <motion.div className="lamp" style={{ transform: lampTransform, opacity: lampOpacity }} />
+      {/*
+        The lamp drifts on a CSS animation and parallaxes on a motion value,
+        so the two live on separate elements. A CSS animation on `transform`
+        overrides an inline one for as long as it runs, which would have
+        thrown the pointer parallax away entirely.
+      */}
+      <div className="lamp-sway">
+        <motion.div className="lamp" style={{ transform: lampTransform, opacity: lampOpacity }} />
+      </div>
+      <div className="haze">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="motes" />
 
       <div
@@ -427,8 +440,7 @@ export const Binder = () => {
 
           {/* Where the binder meets the desk. Behind the board, hence -z. */}
           <div
-            className="contact-shadow pointer-events-none absolute -inset-x-[6%] -bottom-[7%] h-[22%]"
-            style={{ transform: 'translateZ(-30px)' }}
+            className="contact-shadow shadow-sway pointer-events-none absolute -inset-x-[6%] -bottom-[7%] h-[22%]"
           />
 
           {/* The cover board, a hard black margin around the paper. */}

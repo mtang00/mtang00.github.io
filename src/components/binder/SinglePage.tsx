@@ -48,7 +48,14 @@ export const SinglePage = () => {
         on a phone to stand in for the reader's head, and tying the lamp to
         touch would move it only while a finger is down.
       */}
-      <div className="lamp" />
+      <div className="lamp-sway">
+        <div className="lamp" />
+      </div>
+      <div className="haze">
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="motes" />
 
       <div
